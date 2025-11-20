@@ -1,206 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>B.J. Saunders | Portfolio</title>
-    <link rel="stylesheet" href="styles.css" />
-
+  <meta charset="UTF-8" />
+  <title>Brian "BJ" Saunders — Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <header class="site-header">
-        <div class="container nav-container">
-            <nav class="nav">
-                <a href="#hero">Home</a>
-                <a href="#about">About</a>
-                <a href="#projects">Projects</a>
-                <a href="#skills">Skills</a>
-                <a href="#experience">Experience</a>
-                <a href="#contact">Contact</a>
-            </nav>
-        </div>
+  <main class="page">
+
+    <!-- INTRO -->
+    <header class="intro">
+      <p class="intro-eyebrow">Computer Science · Cybersecurity Concentration</p>
+      <h1 class="intro-name">Brian “BJ” Saunders</h1>
+      <p class="intro-tagline">
+        I’m a CS student who likes building real projects, understanding how systems work,
+        and thinking about security while I learn.
+      </p>
     </header>
 
-    <main>
-        <!-- Hero -->
-        <section id="hero" class="hero">
-            <div class="container hero-inner">
-                <div class="hero-text">
-                    <p class="hero-eyebrow">Computer Science • Cybersecurity • Web Dev</p>
-                    <h1>Hi, I’m <span>B.J. Saunders</span>.</h1>
-                    <p class="hero-subtitle">
-                        Junior CS student and aspiring software engineer focused on 
-                        web apps, security, and tech that connects with people.
-                    </p>
-                    <div class="hero-actions">
-                        <a href="#projects" class="btn primary">View My Projects</a>
-                        <a href="#contact" class="btn ghost">Get in Touch</a>
-                    </div>
-                </div>
-                <div class="hero-side">
-                    <!-- You can swap this for an actual image later -->
-                    <div class="hero-card">
-                        <p class="hero-card-title">Currently working on</p>
-                        <ul>
-                            <li> Cybersecurity labs</li>
-                            <li> Front-end portfolio & music site</li>
-                            <li> Data structures & algorithms practice</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- ABOUT / SUMMARY -->
+    <section class="block">
+      <h2>About Me</h2>
+      <p>
+        I’m a junior at UNC Charlotte studying Computer Science with a concentration in
+        cybersecurity. Outside of class, I work as a server at Church and Union, where
+        I’m trusted with closing duties and handling money. That same responsibility
+        shows up in how I approach code, systems, and security.
+      </p>
+      <p>
+        Right now I’m focused on getting stronger at fundamentals: data structures, web
+        development, operating systems, and networking, while slowly adding more
+        security-focused projects.
+      </p>
+    </section>
 
-        <!-- About -->
-        <section id="about" class="section">
-            <div class="container">
-                <h2>About Me</h2>
-                <p>
-                    I’m a junior Computer Science major at UNC Charlotte with a concentration in
-                    cybersecurity. I enjoy building web apps, exploring security, and finding ways
-                    to blend tech with music and design.
-                </p>
-                <p>
-                    Outside of class, I work as a server at Church &amp; Union, where I’ve learned
-                    how to stay organized under pressure, communicate clearly, and take ownership
-                    of closing responsibilities and cash handling.
-                </p>
-            </div>
-        </section>
+    <!-- PROJECTS -->
+    <section class="block">
+      <h2>Projects</h2>
 
-        <!-- Projects -->
-        <section id="projects" class="section section-alt">
-            <div class="container">
-                <h2>Projects</h2>
-                <div class="grid projects-grid">
-                    <!-- Project card 1 -->
-                    <article class="card project-card">
-                        <h3>Hash Table Music Library</h3>
-                        <p class="project-tech">Java • Data Structures</p>
-                        <p>
-                            Implemented a custom hash table with linear probing to store and search
-                            songs efficiently. Focused on collision handling and performance.
-                        </p>
-                        <div class="card-actions">
-                            <a href="#" class="link">View Code (GitHub)</a>
-                        </div>
-                    </article>
+      <article class="card">
+        <h3>Hash Table Library (Java)</h3>
+        <p>
+          Implemented a generic hash table with linear probing, resize logic, and
+          basic CRUD operations for key–value pairs.
+        </p>
+        <ul>
+          <li>Explored collision handling and load factor trade-offs.</li>
+          <li>Practiced writing and testing core data structure logic.</li>
+        </ul>
+      </article>
 
-                    <!-- Project card 2 -->
-                    <article class="card project-card">
-                        <h3>Restaurant Inventory Tracker (Concept)</h3>
-                        <p class="project-tech">JavaScript • HTML • CSS</p>
-                        <p>
-                            Designing a web app to help restaurants and retail stores track inventory,
-                            low-stock alerts, and basic analytics.
-                        </p>
-                        <div class="card-actions">
-                            <a href="#" class="link">Case Study (Coming Soon)</a>
-                        </div>
-                    </article>
+      <article class="card">
+        <h3>BS Design Studio & Portfolio Websites</h3>
+        <p>
+          Built multiple small sites for a personal design brand, a surfboard concept,
+          and a BBQ catering concept using HTML and CSS.
+        </p>
+        <ul>
+          <li>Focused on layout, typography, and simple, clear navigation.</li>
+          <li>Learned how to organize pages, assets, and shared styles.</li>
+        </ul>
+      </article>
 
-                    <!-- Project card 3 -->
-                    <article class="card project-card">
-                        <h3>Artist Portfolio Site</h3>
-                        <p class="project-tech">Front-End • Responsive Design</p>
-                        <p>
-                            A dark R&amp;B-inspired portfolio concept for a music artist, focusing on
-                            clean layout, legible typography, and mood-driven visuals.
-                        </p>
-                        <div class="card-actions">
-                            <a href="#" class="link">Live Demo</a>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
+      <article class="card">
+        <h3>Vulnerable Web Application Pentetration Test</h3>
+        <p>
+          Built a lab with intentionally vulnerable web apps (DVWA & Juice Shop).
+        </p>
+        <ul>
+          <li>Used Nmap and Nikto for reconnaissance and Burp Suite to exploit SQL Injection, XSS, and Command Injection.</li>
+          <li>Documented findings with screenshots and remediation steps in a penetration test report.</li>
+        </ul>
+      </article>
+    </section>
 
-        <!-- Skills -->
-        <section id="skills" class="section">
-            <div class="container">
-                <h2>Skills</h2>
-                <div class="skills-grid">
-                    <div>
-                        <h3>Languages &amp; Tools</h3>
-                        <ul class="pill-list">
-                            <li>Java</li>
-                            <li>Python</li>
-                            <li>JavaScript</li>
-                            <li>HTML &amp; CSS</li>
-                            <li>Git &amp; GitHub</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3>Focus Areas</h3>
-                        <ul class="pill-list">
-                            <li>Web Development</li>
-                            <li>Cybersecurity</li>
-                            <li>Data Structures</li>
-                            <li>Operating Systems</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3>Soft Skills</h3>
-                        <ul class="pill-list">
-                            <li>Teamwork</li>
-                            <li>Communication</li>
-                            <li>Time Management</li>
-                            <li>Customer Service</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- EXPERIENCE -->
+    <section class="block">
+      <h2>Experience</h2>
 
-        <!-- Experience -->
-        <section id="experience" class="section section-alt">
-            <div class="container">
-                <h2>Experience &amp; Education</h2>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <h3>Waiter &mdash; Church &amp; Union, Charlotte</h3>
-                        <p class="timeline-meta">2024 &ndash; Present</p>
-                        <p>
-                            Train new servers, handle closing responsibilities, and manage cash.
-                            Developed strong communication and multitasking skills.
-                        </p>
-                    </div>
-                    <div class="timeline-item">
-                        <h3>B.S. Computer Science (Cybersecurity)</h3>
-                        <p class="timeline-meta">UNC Charlotte &mdash; Expected 2027</p>
-                        <p>
-                            Courses in web development, data structures, operating systems, and
-                            cybersecurity topics.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
+      <article class="card">
+        <h3>Server · Church and Union (Charlotte, NC)</h3>
+        <p>
+          Work in a busy restaurant environment while keeping calm under pressure
+          and paying attention to details.
+        </p>
+        <ul>
+          <li>Trusted with closing the restaurant and handling cash at the end of shifts.</li>
+          <li>Helped train new servers on systems, flow, and guest experience.</li>
+        </ul>
+      </article>
 
-        <!-- Contact -->
-        <section id="contact" class="section">
-            <div class="container">
-                <h2>Contact</h2>
-                <p>
-                    Want to talk about an internship, a project idea, or anything tech + music?
-                    Reach out and I’ll respond as soon as I can.
-                </p>
-                <ul class="contact-list">
-                    <li><strong>Email:</strong> <a href="mailto:youremail@example.com">youremail@example.com</a></li>
-                    <li><strong>GitHub:</strong> <a href="#" target="_blank">github.com/yourusername</a></li>
-                    <li><strong>LinkedIn:</strong> <a href="#" target="_blank">linkedin.com/in/yourprofile</a></li>
-                    <li><strong>Resume:</strong> <a href="#" target="_blank">View PDF</a></li>
-                </ul>
-            </div>
-        </section>
-    </main>
+      <article class="card">
+        <h3>Computer Science Coursework · UNC Charlotte</h3>
+        <p>
+          Mix of programming, systems, and writing-heavy classes that push both the
+          technical side and the communication side.
+        </p>
+        <ul>
+          <li>Built Java and C/C++ projects for data structures and OS concepts.</li>
+          <li>Practiced technical writing and ethics in computing-focused courses.</li>
+        </ul>
+      </article>
+    </section>
 
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; <span id="year"></span> B.J. Saunders. Built with HTML, CSS, and a lot of late-night debugging.</p>
+    <!-- SKILLS -->
+    <section class="block">
+      <h2>Skills</h2>
+
+      <div class="skills">
+        <div class="skills-group">
+          <h3>Languages</h3>
+          <p>Java, JavaScript, HTML, CSS, C / C++, Python (intro)</p>
         </div>
-    </footer>
 
-    <script src="script.js"></script>
+        <div class="skills-group">
+          <h3>Areas I’m Learning</h3>
+          <p>Data structures, web development, operating systems, networking basics.</p>
+        </div>
+
+        <div class="skills-group">
+          <h3>Security Mindset</h3>
+          <p>
+            Thinking about how systems can break, how data moves, and how to build
+            with privacy and safety in mind as I learn more.
+          </p>
+        </div>
+
+        <div class="skills-group">
+          <h3>Tools</h3>
+          <p>VS Code, Git/GitHub, Linux basics, browser DevTools.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="block">
+      <h2>Contact</h2>
+      <p>
+        If you want to talk about internships, projects, or just learning CS and
+        cybersecurity, feel free to reach out.
+      </p>
+      <p>
+        Email: <a href="mailto:bjsaunders976@gmail.com">bjsaunders976@gmail.com</a><br />
+        GitHub: <a href="https://github.com/bsaund12" target="_blank">github.com/bsaund12</a>
+        <br />
+        LinkedIn: <a href="https://www.linkedin.com/in/brian-bj-saunders/" target="_blank">linkedin.com/in/brian-bj-saunders/</a>
+      </p>
+    </section>
+
+  </main>
 </body>
 </html>
+
