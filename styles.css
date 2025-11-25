@@ -154,6 +154,15 @@ a:hover {
   margin-top: 0.5rem;
 }
 
+.icons a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+  height: 300px;
+  padding: 60px;
+}
+
 .skills-group {
   border-radius: 0.75rem;
   border: 1px solid var(--border);  /* Blaze Orange outline */
