@@ -38,6 +38,28 @@ body {
   padding: 3rem 1.5rem 4rem;
 }
 
+/* Navigation (simple, visible) */
+.nav-links {
+  display: flex;
+  gap: 0.9rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.nav-links a:hover {
+  color: var(--border);
+  text-decoration: underline;
+}
+
 /* Typography */
 h1, h2, h3 {
   margin: 0;
@@ -87,6 +109,27 @@ a {
 
 a:hover {
   opacity: 0.85;
+}
+
+/* Keyboard focus styles */
+a:focus,
+button:focus,
+.nav-links a:focus {
+  outline: 3px solid var(--border);
+  outline-offset: 3px;
+  border-radius: 0.35rem;
+}
+
+/* Scroll reveal helpers */
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 420ms cubic-bezier(.2,.9,.2,1), transform 420ms cubic-bezier(.2,.9,.2,1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
 }
 
 /* Intro section */
