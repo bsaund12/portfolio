@@ -8,164 +8,270 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="page">
-
-    <!-- INTRO -->
-    <header class="intro reveal" id="home">
-      <p class="intro-eyebrow">Computer Science · Cybersecurity Concentration</p>
-      <h1 class="intro-name">B.J. “BJ” Saunders</h1>
-      <p class="intro-tagline">
-       Welcome to my portfolio! Here you’ll find a bit about me, my projects, experience, skills, and how to get in touch.
-      </p>
-
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">B.J. Saunders</a>
       <nav class="nav-links" aria-label="Primary">
-        <a href="#about">About</a>
+        <a href="#home">Home</a>
+        <a href="#current-focus">Focus</a>
         <a href="#projects">Projects</a>
         <a href="#experience">Experience</a>
         <a href="#skills">Skills</a>
+        <a href="#outside">Outside</a>
         <a href="#contact">Contact</a>
       </nav>
-    </header>
+    </div>
+  </header>
+  <main class="page">
 
-    <section class="divider reveal">
-      <br />
-      <br />
-      <p>I’m a CS student who likes building real projects, understanding how systems work,
-        and thinking about security while I learn.
-      </p>
-    </section>
-
-    <!-- ABOUT / SUMMARY -->
-    <section id="about" class="block reveal">
-      <h2>About Me</h2>
-      <p>
-        I’m a junior at UNC Charlotte studying Computer Science with a concentration in
-        cybersecurity. Outside of class, I enjoy building small projects to practice
-        coding and system design skills. When I'm not working on school or coding, I like to work out
-        and listen to music. 
-      </p>
-      <p>
-        Right now I’m focused on getting stronger at fundamentals: data structures, web
-        development, operating systems, and networking, while adding more and more
-        security-focused projects. Just honing my skills any way I can.
-      </p>
-    </section>
-
-    <!-- PROJECTS -->
-    <section id="projects" class="block reveal">
-      <h2>Projects</h2>
-
-      <article class="card reveal">
-        <h3>Hash Table Library (Java)</h3>
-        <p>
-          Implemented a generic hash table with linear probing, resize logic, and
-          basic CRUD operations for key–value pairs.
+    <section id="home" class="hero reveal">
+      <div class="hero-content">
+        <p class="intro-eyebrow">Computer Science · Cybersecurity Concentration</p>
+        <h1 class="intro-name">Brian “BJ” Saunders Jr</h1>
+        <p class="hero-tagline">
+          Welcome to my portfolio! Here you’ll find a bit about me, my projects, experience, skills, and how to get in touch.
         </p>
-        <ul>
-          <li>Explored collision handling and load factor trade-offs.</li>
-          <li>Practiced writing and testing core data structure logic.</li>
-        </ul>
-      </article>
-
-      <article class="card reveal">
-        <h3>BS Design Studio & Portfolio Websites</h3>
-        <p>
-          Built multiple small sites for a personal design brand, a surfboard concept,
-          and a BBQ catering concept using HTML and CSS.
+        <p class="hero-copy">
+          I’m a CS student who likes building real projects, understanding how systems work, and thinking about security while I learn.
         </p>
-        <ul>
-          <li>Focused on layout, typography, and simple, clear navigation.</li>
-          <li>Learned how to organize pages, assets, and shared styles.</li>
-        </ul>
-      </article>
-
-      <article class="card reveal">
-        <h3>Vulnerable Web Application Penetration Test</h3>
-        <p>
-          Built a lab with intentionally vulnerable web apps (DVWA & Juice Shop).
-        </p>
-        <ul>
-          <li>Used Nmap and Nikto for reconnaissance and Burp Suite to exploit SQL Injection, XSS, and Command Injection.</li>
-          <li>Documented findings with screenshots and remediation steps in a penetration test report.</li>
-        </ul>
-      </article>
-    </section>
-
-    <!-- EXPERIENCE -->
-    <section id="experience" class="block reveal">
-      <h2>Experience</h2>
-
-      <article class="card reveal">
-        <h3>Server · Church and Union (Charlotte, NC)</h3>
-        <p>
-          Work in a busy restaurant environment while keeping calm under pressure
-          and paying attention to details.
-        </p>
-        <ul>
-          <li>Trusted with closing the restaurant and handling cash at the end of shifts.</li>
-          <li>Helped train new servers on systems, flow, and guest experience.</li>
-        </ul>
-      </article>
-
-      <article class="card reveal">
-        <h3>Computer Science Coursework · UNC Charlotte</h3>
-        <p>
-          Mix of programming, systems, and writing-heavy classes that push both the
-          technical side and the communication side.
-        </p>
-        <ul>
-          <li>Built Java and C/C++ projects for data structures and OS concepts.</li>
-          <li>Practiced technical writing and ethics in computing-focused courses.</li>
-        </ul>
-      </article>
-    </section>
-
-    <!-- SKILLS -->
-    <section id="skills" class="block reveal">
-      <h2>Skills</h2>
-
-      <div class="skills">
-        <div class="skills-group reveal">
-          <h3>Languages</h3>
-          <p>Java, JavaScript, HTML, CSS, C / C++, Python (intro)</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#projects">View My Work</a>
+          <a class="button button-secondary" href="#contact">Let’s Connect</a>
+          <a class="button button-secondary" href="assets/documents/brian-saunders-resume.pdf" target="_blank" rel="noopener noreferrer">View Resume</a>
         </div>
-
-        <div class="skills-group reveal">
-          <h3>Areas I’m Learning</h3>
-          <p>Data structures, web development, operating systems, networking basics.</p>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="audio-wave audio-wave-one"></div>
+        <div class="audio-wave audio-wave-two"></div>
+        <div class="equalizer">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
-
-        <div class="skills-group reveal">
-          <h3>Security Mindset</h3>
-          <p>
-            Thinking about how systems can break, how data moves, and how to build
-            with privacy and safety in mind as I learn more.
-          </p>
-        </div>
-
-        <div class="skills-group reveal">
-          <h3>Tools</h3>
-          <p>VS Code, Git/GitHub, Linux basics, browser DevTools.</p>
+        <div class="portrait-ring">
+          <img src="assets/images/bj-headshot.png" alt="" class="hero-portrait" />
         </div>
       </div>
     </section>
 
-    <!-- CONTACT -->
-    <section id="contact" class="block reveal">
-      <h2>Contact</h2>
+    <section id="current-focus" class="current-focus reveal">
+      <div class="section-heading">
+        <h2>Current Focus</h2>
+        <p class="section-text">What I am focused on building, learning, and strengthening right now.</p>
+      </div>
+      <div class="focus-list">
+        <article class="focus-card">
+          <h3>Building Real Full-Stack Experience</h3>
+          <p>Building full-stack HRMS features as an Application Development Intern while learning how production software comes together for real users.</p>
+        </article>
+        <article class="focus-card">
+          <h3>Becoming Certified</h3>
+          <p>Working toward technical certifications that deepen my knowledge and give recruiters proof of the skills I am building.</p>
+        </article>
+        <article class="focus-card">
+          <h3>Building OptionScope</h3>
+          <p>Creating an options-pricing engine that calculates theoretical option prices in real time so I can learn investing and options more deeply.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="about" class="about block reveal">
+      <div class="section-heading">
+        <h2>About Me</h2>
+      </div>
+      <p>
+        I’m a rising senior at UNC Charlotte who enjoys technology because there is always something new to learn, build, and improve. I am drawn to problems where I do not already have all the answers, because those are often the experiences that help me grow the fastest.
+      </p>
+      <p>
+        I work well in collaborative environments where I can learn from people with more experience, understand how they approach problems, and adapt those lessons into my own way of thinking. Long term, I want to become an engineer people can depend on, while building financial stability and eventually being able to provide for my family and help others.
+      </p>
+    </section>
+
+    <section id="projects" class="projects block reveal">
+      <div class="section-heading">
+        <h2>Selected Projects</h2>
+        <p class="section-text">A polished showcase of the current project work and the thinking behind it.</p>
+      </div>
+      <div class="project-grid">
+        <article class="project-card reveal">
+          <div class="project-header">
+            <h3>Options Payoff Playground</h3>
+          </div>
+          <p class="project-stack">React Native, Expo, JavaScript</p>
+          <p>
+            Built an interactive mobile application to visualize stock option payoff strategies.
+          </p>
+          <ul>
+            <li>Implemented dynamic charts, draggable price interactions, and real-time payoff calculations.</li>
+            <li>Designed modular components and state management to support future strategy expansion.</li>
+            <li>Applied structured data handling and modular component design to support scalability and maintainability.</li>
+          </ul>
+          <div class="project-meta">
+            <span class="meta-chip meta-empty">Tags to be added</span>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-header">
+            <h3>Vulnerable Web Application Penetration Test</h3>
+          </div>
+          <p class="project-stack">Kali Linux, DVWA, OWASP Juice Shop, Nmap, Nikto, Burp Suite</p>
+          <p>
+            Built a controlled lab environment with intentionally vulnerable web applications.
+          </p>
+          <ul>
+            <li>Conducted reconnaissance and exploitation using Nmap, Nikto, and Burp Suite.</li>
+            <li>Identified SQL Injection, XSS, and Command Injection vulnerabilities.</li>
+            <li>Documented findings, risk assessment, and remediation steps in a structured penetration test report.</li>
+          </ul>
+          <div class="project-meta">
+            <span class="meta-chip meta-empty">Tags to be added</span>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-header">
+            <h3>Hash Table Library</h3>
+          </div>
+          <p class="project-stack">Java</p>
+          <p>
+            Implemented a generic hash table using linear probing, resize logic, and basic CRUD operations for key-value pairs.
+          </p>
+          <ul>
+            <li>Explored collision handling and load-factor tradeoffs.</li>
+            <li>Practiced writing and testing core data-structure logic.</li>
+          </ul>
+          <div class="project-meta">
+            <span class="meta-chip meta-empty">Tags to be added</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="experience" class="experience block reveal">
+      <div class="section-heading">
+        <h2>Experience</h2>
+      </div>
+      <div class="experience-grid">
+        <article class="experience-card reveal">
+          <h3>Application Development Intern</h3>
+          <p class="experience-meta">Jan 2026 - Present</p>
+          <p>
+            Build and improve full-stack features using React and APIs for leave-request workflows and UI state.
+          </p>
+          <ul>
+            <li>Collaborate using Git branching, pull requests, and merge-conflict resolution in an agile team.</li>
+            <li>Debug issues, integrate backend endpoints, and ensure code meets deployment standards.</li>
+          </ul>
+        </article>
+
+        <article class="experience-card reveal">
+          <h3>Technology Coach, YouCanTech</h3>
+          <p class="experience-meta">Dec 2025 - Present</p>
+          <p>
+            Coach middle and high school students in coding through hands-on robotics.
+          </p>
+          <ul>
+            <li>Teach programming logic, problem-solving, and computational thinking.</li>
+            <li>Mentor students through debugging and iterative development.</li>
+          </ul>
+        </article>
+
+        <article class="experience-card experience-card-secondary reveal">
+          <h3>Additional Experience: Waiter, Church and Union</h3>
+          <p class="experience-meta">Oct 2024 - Present</p>
+          <p>
+            Maintain clear communication, prioritization, accuracy, and professionalism in a high-volume environment.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="skills" class="skills block reveal">
+      <div class="section-heading">
+        <h2>Skills</h2>
+        <p class="section-text">Organized groups for the technologies, systems, and tools you’re using today.</p>
+      </div>
+      <div class="skills-grid">
+        <article class="skills-card reveal">
+          <h3>Languages</h3>
+          <p>Java, JavaScript, Python, C, C++, HTML, CSS</p>
+        </article>
+        <article class="skills-card reveal">
+          <h3>Frameworks & Platforms</h3>
+          <p>React, React Native, Expo, JUnit</p>
+        </article>
+        <article class="skills-card reveal">
+          <h3>Developer Tools</h3>
+          <p>Git, GitHub, Visual Studio Code, Xcode Simulator</p>
+        </article>
+        <article class="skills-card reveal">
+          <h3>Security Tools & Concepts</h3>
+          <p>Kali Linux, Burp Suite, Nmap, Nikto, OWASP Juice Shop, DVWA, Penetration Testing</p>
+        </article>
+        <article class="skills-card reveal">
+          <h3>Core Concepts</h3>
+          <p>Object-Oriented Programming, Data Structures, Algorithms, Testing, Debugging, Secure Software Development</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="outside" class="outside-of-code block reveal">
+      <div class="section-heading">
+        <h2>Outside of Code</h2>
+        <p class="section-text">A few things that keep me grounded, creative, and growing outside of technical work.</p>
+      </div>
+      <div class="outside-grid">
+        <article class="outside-card outside-card-featured reveal">
+          <h3>Music</h3>
+          <p>
+            Music is one of the biggest sources of comfort, creativity, and energy in my life. It is with me when I am working out, studying, driving, or simply taking time to reset. I connect with artists across different genres because great music can make you feel understood, even by someone you have never met.
+          </p>
+          <p>
+            Music also reminds me how powerful simple things can be. Like food, it brings people together across different backgrounds, experiences, and emotions. It is not just something I listen to; it is a major part of how I reflect, stay motivated, and connect with other people.
+          </p>
+        </article>
+        <article class="outside-card reveal">
+          <h3>Training</h3>
+          <p>
+            The gym helps me stay balanced. Improving physically supports the work I am doing intellectually and emotionally too, giving me structure, discipline, and a way to reset.
+          </p>
+          <p>
+            That mindset carries into coding, reading, learning, and becoming more consistent over time.
+          </p>
+        </article>
+        <article class="outside-card reveal">
+          <h3>Rock Climbing</h3>
+          <p>
+            Rock climbing makes me slow down, study the route, and trust that I can find the next move even when the answer is not obvious.
+          </p>
+          <p>
+            I like that progress comes from patience, problem-solving, and being willing to try again after missing a hold.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" class="contact block reveal">
+      <div class="section-heading">
+        <h2>Contact</h2>
+      </div>
       <p>
         If you want to talk about internships, projects, or just learning CS and
         cybersecurity, feel free to reach out.
       </p>
-      <p>
+      <p class="contact-links">
         Email: <a href="mailto:bjsaunders976@gmail.com">bjsaunders976@gmail.com</a><br />
         GitHub: <a href="https://github.com/bsaund12" target="_blank" rel="noopener noreferrer">github.com/bsaund12</a>
         <br />
         LinkedIn: <a href="https://www.linkedin.com/in/bj-saunders/" target="_blank" rel="noopener noreferrer">linkedin.com/in/bj-saunders/</a>
+        <br />
+        Resume PDF: <a href="assets/documents/brian-saunders-resume.pdf" target="_blank" rel="noopener noreferrer">View Resume PDF</a>
       </p>
     </section>
-
   </main>
+  <script src="script.js" defer></script>
 </body>
 </html>
-
