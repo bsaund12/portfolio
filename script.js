@@ -1,5 +1,76 @@
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// Subtle ambient dust layer.
+const dustCanvas = document.querySelector('.ambient-dust');
+
+if (dustCanvas && !reduceMotion) {
+  const ctx = dustCanvas.getContext('2d');
+  const particles = [];
+  const particleCount = 58;
+  let width = 0;
+  let height = 0;
+  let animationFrameId;
+
+  const resizeDustCanvas = () => {
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    dustCanvas.width = Math.floor(width * pixelRatio);
+    dustCanvas.height = Math.floor(height * pixelRatio);
+    dustCanvas.style.width = `${width}px`;
+    dustCanvas.style.height = `${height}px`;
+    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+  };
+
+  const createParticle = () => ({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    size: Math.random() * 1.4 + 0.35,
+    speedX: (Math.random() - 0.5) * 0.08,
+    speedY: Math.random() * 0.12 + 0.025,
+    alpha: Math.random() * 0.28 + 0.08
+  });
+
+  const seedParticles = () => {
+    particles.length = 0;
+
+    for (let i = 0; i < particleCount; i += 1) {
+      particles.push(createParticle());
+    }
+  };
+
+  const drawDust = () => {
+    ctx.clearRect(0, 0, width, height);
+
+    particles.forEach((particle) => {
+      particle.x += particle.speedX;
+      particle.y += particle.speedY;
+
+      if (particle.y > height + 8) particle.y = -8;
+      if (particle.x < -8) particle.x = width + 8;
+      if (particle.x > width + 8) particle.x = -8;
+
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(245, 242, 234, ${particle.alpha})`;
+      ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    animationFrameId = window.requestAnimationFrame(drawDust);
+  };
+
+  resizeDustCanvas();
+  seedParticles();
+  drawDust();
+
+  window.addEventListener('resize', () => {
+    window.cancelAnimationFrame(animationFrameId);
+    resizeDustCanvas();
+    seedParticles();
+    drawDust();
+  });
+}
+
 // Smooth scroll for same-page section links.
 document.querySelectorAll('[data-scroll], a[href^="#"]').forEach((el) => {
   el.addEventListener('click', (e) => {
@@ -116,14 +187,30 @@ if (musicPlayer && musicPlayerToggle && musicPlayerClose && !window.__portfolioM
     });
   };
 
+  const renderSpotifyLoading = () => {
+    musicPlayer.classList.remove('is-playing');
+
+    if (compactTitle) compactTitle.textContent = 'Loading recent listening activity…';
+    if (compactMeta) compactMeta.textContent = '';
+    if (compactStatus) compactStatus.textContent = 'CHECKING SPOTIFY';
+    if (expandedTitle) expandedTitle.textContent = 'See what Brian’s listening to';
+    if (expandedMeta) expandedMeta.textContent = '';
+    if (statusHeading) statusHeading.textContent = 'CHECKING SPOTIFY';
+    if (statusText) statusText.textContent = 'Loading recent listening activity…';
+
+    hideSpotifyLink();
+  };
+
   const renderFallback = () => {
     musicPlayer.classList.remove('is-playing');
 
-    if (compactTitle) compactTitle.textContent = 'Spotify unavailable';
-    if (compactMeta) compactMeta.textContent = 'Check back soon';
-    if (compactStatus) compactStatus.textContent = 'Music Unavailable';
-    if (statusHeading) statusHeading.textContent = 'Music Unavailable';
-    if (statusText) statusText.textContent = 'Spotify connection unavailable';
+    if (compactTitle) compactTitle.textContent = 'Check back soon';
+    if (compactMeta) compactMeta.textContent = '';
+    if (compactStatus) compactStatus.textContent = 'SPOTIFY UNAVAILABLE';
+    if (expandedTitle) expandedTitle.textContent = 'Check back soon';
+    if (expandedMeta) expandedMeta.textContent = '';
+    if (statusHeading) statusHeading.textContent = 'SPOTIFY UNAVAILABLE';
+    if (statusText) statusText.textContent = 'Check back soon';
 
     hideSpotifyLink();
   };
@@ -132,7 +219,7 @@ if (musicPlayer && musicPlayerToggle && musicPlayerClose && !window.__portfolioM
     const title = hasText(track.title) ? track.title.trim() : 'Untitled track';
     const artist = hasText(track.artist) ? track.artist.trim() : 'Unknown artist';
     const album = hasText(track.album) ? track.album.trim() : 'Unknown album';
-    const status = track.isPlaying ? 'Currently Listening' : 'Recently Played';
+    const status = track.isPlaying ? 'NOW PLAYING.' : 'RECENTLY PLAYED.';
 
     musicPlayer.classList.toggle('is-playing', Boolean(track.isPlaying));
 
@@ -159,6 +246,8 @@ if (musicPlayer && musicPlayerToggle && musicPlayerClose && !window.__portfolioM
   };
 
   const loadSpotifyTrack = async () => {
+    renderSpotifyLoading();
+
     try {
       const response = await fetch(spotifyNowPlayingEndpoint, {
         cache: 'no-store'

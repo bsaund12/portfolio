@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <canvas class="ambient-dust" aria-hidden="true"></canvas>
   <header class="site-header">
     <div class="header-inner">
       <a class="brand" href="#home">B.J. Saunders</a>
@@ -262,14 +263,35 @@
         If you want to talk about internships, projects, or just learning CS and
         cybersecurity, feel free to reach out.
       </p>
-      <p class="contact-links">
-        Email: <a href="mailto:bjsaunders976@gmail.com">bjsaunders976@gmail.com</a><br />
-        GitHub: <a href="https://github.com/bsaund12" target="_blank" rel="noopener noreferrer">github.com/bsaund12</a>
-        <br />
-        LinkedIn: <a href="https://www.linkedin.com/in/bj-saunders/" target="_blank" rel="noopener noreferrer">linkedin.com/in/bj-saunders/</a>
-        <br />
-        Resume PDF: <a href="assets/documents/brian-saunders-resume.pdf" target="_blank" rel="noopener noreferrer">View Resume PDF</a>
-      </p>
+      <div class="contact-links" aria-label="Contact links">
+        <a class="contact-icon-link" href="mailto:bjsaunders976@gmail.com" aria-label="Email Brian" title="Email">
+          <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+            <path d="M4 6h16v12H4z" />
+            <path d="m4 7 8 6 8-6" />
+          </svg>
+        </a>
+        <a class="contact-icon-link" href="https://github.com/bsaund12" target="_blank" rel="noopener noreferrer" aria-label="View Brian's GitHub" title="GitHub">
+          <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+            <path d="M12 2.75a9.25 9.25 0 0 0-2.93 18.03c.46.08.63-.2.63-.44v-1.6c-2.56.56-3.1-1.1-3.1-1.1-.42-1.07-1.03-1.36-1.03-1.36-.84-.57.06-.56.06-.56.93.07 1.42.96 1.42.96.83 1.41 2.17 1 2.7.77.08-.6.32-1 .58-1.23-2.04-.23-4.19-1.02-4.19-4.54 0-1 .36-1.82.95-2.46-.1-.23-.41-1.16.09-2.43 0 0 .78-.25 2.55.94A8.78 8.78 0 0 1 12 7.42c.79 0 1.57.1 2.31.31 1.77-1.19 2.55-.94 2.55-.94.5 1.27.19 2.2.09 2.43.6.64.95 1.46.95 2.46 0 3.53-2.15 4.3-4.2 4.53.33.29.63.85.63 1.71v2.42c0 .24.17.53.64.44A9.25 9.25 0 0 0 12 2.75Z" />
+          </svg>
+        </a>
+        <a class="contact-icon-link" href="https://www.linkedin.com/in/bj-saunders/" target="_blank" rel="noopener noreferrer" aria-label="View Brian's LinkedIn" title="LinkedIn">
+          <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+            <path d="M5.5 9.25h3v9.25h-3z" />
+            <path d="M7 5.5a1.75 1.75 0 1 1 0 3.5 1.75 1.75 0 0 1 0-3.5Z" />
+            <path d="M11 9.25h2.85v1.27c.43-.74 1.35-1.45 2.85-1.45 2.47 0 3.8 1.57 3.8 4.46v4.97h-3v-4.52c0-1.45-.51-2.18-1.55-2.18-1.18 0-1.95.84-1.95 2.18v4.52h-3z" />
+          </svg>
+        </a>
+        <a class="contact-icon-link" href="assets/documents/brian-saunders-resume.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open Brian's resume" title="Resume">
+          <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+            <path d="M7 3.5h7l3 3v14H7z" />
+            <path d="M14 3.5v3h3" />
+            <path d="M9.5 11h5" />
+            <path d="M9.5 14h5" />
+            <path d="M9.5 17h3" />
+          </svg>
+        </a>
+      </div>
     </section>
   </main>
   <aside class="music-player" aria-label="Currently listening mini-player">
@@ -278,14 +300,14 @@
         <img class="compact-album-art" data-spotify-album-art="compact" alt="" />
       </span>
       <span class="compact-track-copy">
-        <span class="compact-status" data-spotify-status="compact">Currently Listening</span>
-        <span class="compact-title" data-spotify-title="compact">Song title coming soon</span>
-        <span class="compact-artist" data-spotify-meta="compact">Artist placeholder · Album placeholder</span>
+        <span class="compact-status" data-spotify-status="compact">SOUNDTRACK</span>
+        <span class="compact-title" data-spotify-title="compact">See what Brian’s listening to</span>
+        <span class="compact-artist" data-spotify-meta="compact"></span>
       </span>
     </button>
     <section class="music-player-card" id="music-player-card" aria-labelledby="music-player-title">
       <div class="music-player-header">
-        <h2 id="music-player-title" data-spotify-status-heading>Currently Listening</h2>
+        <h2 id="music-player-title" data-spotify-status-heading>SOUNDTRACK</h2>
         <button class="music-player-close" type="button" aria-label="Minimize currently listening player">
           <span aria-hidden="true">×</span>
         </button>
@@ -295,9 +317,9 @@
           <img class="expanded-album-art" data-spotify-album-art="expanded" alt="" />
         </div>
         <div class="music-player-copy">
-          <p class="track-title" data-spotify-title="expanded">Song title coming soon</p>
-          <p class="track-meta" data-spotify-meta="expanded">Artist placeholder · Album placeholder</p>
-          <p class="track-status" data-spotify-status>Loading Spotify</p>
+          <p class="track-title" data-spotify-title="expanded">See what Brian’s listening to</p>
+          <p class="track-meta" data-spotify-meta="expanded"></p>
+          <p class="track-status" data-spotify-status>Open the player for recent listening activity.</p>
           <a class="spotify-placeholder spotify-link is-hidden" data-spotify-link href="#" target="_blank" rel="noopener noreferrer">Open in Spotify</a>
         </div>
       </div>
