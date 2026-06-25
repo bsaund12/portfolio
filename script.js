@@ -6,15 +6,60 @@ const dustCanvas = document.querySelector('.ambient-dust');
 if (dustCanvas && !reduceMotion) {
   const ctx = dustCanvas.getContext('2d');
   const particles = [];
-  const particleCount = 58;
+  const canUsePointerAttraction = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const attraction = {
+    active: false,
+    x: 0,
+    y: 0,
+    radius: 128,
+    force: 0.0028,
+    maxVelocity: 0.18
+  };
+  const getDustSettings = () => {
+    if (window.innerWidth < 700) {
+      return {
+        count: 64,
+        minRadius: 0.35,
+        radiusRange: 1,
+        minAlpha: 0.12,
+        alphaRange: 0.2,
+        maxSpeedX: 0.03,
+        minSpeedY: 0.014,
+        speedYRange: 0.031
+      };
+    }
+
+    return {
+      count: 128,
+      minRadius: 0.45,
+      radiusRange: 1.4,
+      minAlpha: 0.14,
+      alphaRange: 0.24,
+      maxSpeedX: 0.035,
+      minSpeedY: 0.018,
+      speedYRange: 0.042
+    };
+  };
+
   let width = 0;
   let height = 0;
+  let dustSettings = getDustSettings();
+  let resizeObserver;
   let animationFrameId;
 
+  const getDocumentHeight = () => Math.max(
+    document.body.scrollHeight,
+    document.body.offsetHeight,
+    document.documentElement.clientHeight,
+    document.documentElement.scrollHeight,
+    document.documentElement.offsetHeight
+  );
+
   const resizeDustCanvas = () => {
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    const pixelRatio = window.devicePixelRatio || 1;
     width = window.innerWidth;
-    height = window.innerHeight;
+    height = getDocumentHeight();
+    dustSettings = getDustSettings();
     dustCanvas.width = Math.floor(width * pixelRatio);
     dustCanvas.height = Math.floor(height * pixelRatio);
     dustCanvas.style.width = `${width}px`;
@@ -25,16 +70,18 @@ if (dustCanvas && !reduceMotion) {
   const createParticle = () => ({
     x: Math.random() * width,
     y: Math.random() * height,
-    size: Math.random() * 1.4 + 0.35,
-    speedX: (Math.random() - 0.5) * 0.08,
-    speedY: Math.random() * 0.12 + 0.025,
-    alpha: Math.random() * 0.28 + 0.08
+    size: Math.random() * dustSettings.radiusRange + dustSettings.minRadius,
+    speedX: (Math.random() - 0.5) * (dustSettings.maxSpeedX * 2),
+    speedY: Math.random() * dustSettings.speedYRange + dustSettings.minSpeedY,
+    alpha: Math.random() * dustSettings.alphaRange + dustSettings.minAlpha,
+    velocityX: 0,
+    velocityY: 0
   });
 
   const seedParticles = () => {
     particles.length = 0;
 
-    for (let i = 0; i < particleCount; i += 1) {
+    for (let i = 0; i < dustSettings.count; i += 1) {
       particles.push(createParticle());
     }
   };
@@ -43,8 +90,25 @@ if (dustCanvas && !reduceMotion) {
     ctx.clearRect(0, 0, width, height);
 
     particles.forEach((particle) => {
-      particle.x += particle.speedX;
-      particle.y += particle.speedY;
+      if (attraction.active) {
+        const deltaX = attraction.x - particle.x;
+        const deltaY = attraction.y - particle.y;
+        const distance = Math.hypot(deltaX, deltaY);
+
+        if (distance > 0 && distance < attraction.radius) {
+          const pull = (1 - distance / attraction.radius) * attraction.force;
+          particle.velocityX += (deltaX / distance) * pull;
+          particle.velocityY += (deltaY / distance) * pull;
+        }
+      }
+
+      particle.velocityX *= 0.94;
+      particle.velocityY *= 0.94;
+      particle.velocityX = Math.max(-attraction.maxVelocity, Math.min(attraction.maxVelocity, particle.velocityX));
+      particle.velocityY = Math.max(-attraction.maxVelocity, Math.min(attraction.maxVelocity, particle.velocityY));
+
+      particle.x += particle.speedX + particle.velocityX;
+      particle.y += particle.speedY + particle.velocityY;
 
       if (particle.y > height + 8) particle.y = -8;
       if (particle.x < -8) particle.x = width + 8;
@@ -63,12 +127,41 @@ if (dustCanvas && !reduceMotion) {
   seedParticles();
   drawDust();
 
-  window.addEventListener('resize', () => {
+  const handleDustResize = () => {
     window.cancelAnimationFrame(animationFrameId);
     resizeDustCanvas();
     seedParticles();
     drawDust();
-  });
+  };
+
+  window.addEventListener('resize', handleDustResize);
+
+  if ('ResizeObserver' in window) {
+    resizeObserver = new ResizeObserver(handleDustResize);
+    resizeObserver.observe(document.documentElement);
+    resizeObserver.observe(document.body);
+  }
+
+  if (canUsePointerAttraction) {
+    document.querySelectorAll('a, button').forEach((element) => {
+      element.addEventListener('pointerenter', (event) => {
+        attraction.active = true;
+        attraction.x = event.clientX + window.scrollX;
+        attraction.y = event.clientY + window.scrollY;
+      });
+
+      element.addEventListener('pointermove', (event) => {
+        if (!attraction.active) return;
+
+        attraction.x = event.clientX + window.scrollX;
+        attraction.y = event.clientY + window.scrollY;
+      });
+
+      element.addEventListener('pointerleave', () => {
+        attraction.active = false;
+      });
+    });
+  }
 }
 
 // Smooth scroll for same-page section links.
