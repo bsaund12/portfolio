@@ -48,3 +48,138 @@ if (reduceMotion || !('IntersectionObserver' in window)) {
 
   revealElements.forEach((el) => observer.observe(el));
 }
+
+// Floating music mini-player
+const musicPlayer = document.querySelector('.music-player');
+const musicPlayerToggle = document.querySelector('.music-player-toggle');
+const musicPlayerClose = document.querySelector('.music-player-close');
+const spotifyNowPlayingEndpoint = 'https://portfolio-now-playing-api.vercel.app/api/now-playing';
+const spotifyPollIntervalMs = 60000;
+
+if (musicPlayer && musicPlayerToggle && musicPlayerClose && !window.__portfolioMusicPlayerInitialized) {
+  window.__portfolioMusicPlayerInitialized = true;
+
+  const setMusicPlayerExpanded = (isExpanded) => {
+    musicPlayer.classList.toggle('is-expanded', isExpanded);
+    musicPlayerToggle.setAttribute('aria-expanded', String(isExpanded));
+
+    if (isExpanded) {
+      musicPlayerClose.focus();
+    } else {
+      musicPlayerToggle.focus();
+    }
+  };
+
+  musicPlayerToggle.addEventListener('click', () => setMusicPlayerExpanded(true));
+  musicPlayerClose.addEventListener('click', () => setMusicPlayerExpanded(false));
+
+  const compactTitle = musicPlayer.querySelector('[data-spotify-title="compact"]');
+  const compactArtist = musicPlayer.querySelector('[data-spotify-artist="compact"]');
+  const expandedTitle = musicPlayer.querySelector('[data-spotify-title="expanded"]');
+  const expandedMeta = musicPlayer.querySelector('[data-spotify-meta]');
+  const statusHeading = musicPlayer.querySelector('[data-spotify-status-heading]');
+  const statusText = musicPlayer.querySelector('[data-spotify-status]');
+  const spotifyLink = musicPlayer.querySelector('[data-spotify-link]');
+  const albumArtImages = musicPlayer.querySelectorAll('[data-spotify-album-art]');
+
+  const hasText = (value) => typeof value === 'string' && value.trim().length > 0;
+
+  const isValidSpotifyUrl = (value) => {
+    if (!hasText(value)) return false;
+
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' && url.hostname === 'open.spotify.com';
+    } catch {
+      return false;
+    }
+  };
+
+  const hideSpotifyLink = () => {
+    if (!spotifyLink) return;
+
+    spotifyLink.classList.add('is-hidden');
+    spotifyLink.removeAttribute('href');
+  };
+
+  const updateAlbumArt = ({ albumArt, title, artist }) => {
+    albumArtImages.forEach((image) => {
+      const altText = `Album artwork for ${title} by ${artist}`;
+      image.alt = altText;
+
+      if (hasText(albumArt)) {
+        image.src = albumArt;
+      } else {
+        image.removeAttribute('src');
+      }
+    });
+  };
+
+  const renderFallback = () => {
+    musicPlayer.classList.remove('is-playing');
+
+    if (compactTitle) compactTitle.textContent = 'Spotify unavailable';
+    if (compactArtist) compactArtist.textContent = 'Check back soon';
+    if (statusHeading) statusHeading.textContent = 'Music Unavailable';
+    if (statusText) statusText.textContent = 'Spotify connection unavailable';
+
+    hideSpotifyLink();
+  };
+
+  const renderSpotifyTrack = (track) => {
+    const title = hasText(track.title) ? track.title.trim() : 'Untitled track';
+    const artist = hasText(track.artist) ? track.artist.trim() : 'Unknown artist';
+    const album = hasText(track.album) ? track.album.trim() : 'Unknown album';
+    const status = track.isPlaying ? 'Currently Listening' : 'Recently Played';
+
+    musicPlayer.classList.toggle('is-playing', Boolean(track.isPlaying));
+
+    if (compactTitle) compactTitle.textContent = title;
+    if (compactArtist) compactArtist.textContent = artist;
+    if (expandedTitle) expandedTitle.textContent = title;
+    if (expandedMeta) expandedMeta.textContent = `${artist} · ${album}`;
+    if (statusHeading) statusHeading.textContent = status;
+    if (statusText) statusText.textContent = status;
+
+    updateAlbumArt({
+      albumArt: track.albumArt,
+      title,
+      artist
+    });
+
+    if (isValidSpotifyUrl(track.spotifyUrl)) {
+      spotifyLink.href = track.spotifyUrl;
+      spotifyLink.classList.remove('is-hidden');
+    } else {
+      hideSpotifyLink();
+    }
+  };
+
+  const loadSpotifyTrack = async () => {
+    try {
+      const response = await fetch(spotifyNowPlayingEndpoint, {
+        cache: 'no-store'
+      });
+
+      if (!response.ok) {
+        throw new Error('Spotify request failed');
+      }
+
+      const track = await response.json();
+
+      if (!track || !hasText(track.title) || !hasText(track.artist)) {
+        throw new Error('Spotify response was incomplete');
+      }
+
+      renderSpotifyTrack(track);
+    } catch {
+      renderFallback();
+    }
+  };
+
+  loadSpotifyTrack();
+
+  if (!window.__portfolioSpotifyPlayerInterval) {
+    window.__portfolioSpotifyPlayerInterval = window.setInterval(loadSpotifyTrack, spotifyPollIntervalMs);
+  }
+}

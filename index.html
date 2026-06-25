@@ -272,6 +272,44 @@
       </p>
     </section>
   </main>
+  <aside class="music-player" aria-label="Currently listening mini-player">
+    <button class="music-player-toggle" type="button" aria-label="Open currently listening player" aria-expanded="false" aria-controls="music-player-card">
+      <span class="compact-art-wrap" aria-hidden="true">
+        <span class="vinyl-disc vinyl-disc-compact">
+          <span class="vinyl-center">
+            <img class="album-cover-placeholder" data-spotify-album-art="compact" alt="" />
+          </span>
+        </span>
+      </span>
+      <span class="compact-track-copy">
+        <span class="compact-title" data-spotify-title="compact">Song title coming soon</span>
+        <span class="compact-artist" data-spotify-artist="compact">Artist placeholder</span>
+      </span>
+    </button>
+    <section class="music-player-card" id="music-player-card" aria-labelledby="music-player-title">
+      <div class="music-player-header">
+        <h2 id="music-player-title" data-spotify-status-heading>Currently Listening</h2>
+        <button class="music-player-close" type="button" aria-label="Minimize currently listening player">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="music-player-body">
+        <div class="album-placeholder">
+          <span class="vinyl-disc vinyl-disc-card">
+            <span class="vinyl-center">
+              <img class="album-cover-placeholder" data-spotify-album-art="expanded" alt="" />
+            </span>
+          </span>
+        </div>
+        <div class="music-player-copy">
+          <p class="track-title" data-spotify-title="expanded">Song title coming soon</p>
+          <p class="track-meta" data-spotify-meta>Artist placeholder · Album placeholder</p>
+          <p class="track-status" data-spotify-status>Live Spotify connection coming soon</p>
+          <a class="spotify-placeholder spotify-link is-hidden" data-spotify-link href="#" target="_blank" rel="noopener noreferrer">Open in Spotify</a>
+        </div>
+      </div>
+    </section>
+  </aside>
   <script src="script.js" defer></script>
 </body>
 </html>
