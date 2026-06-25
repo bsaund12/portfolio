@@ -275,11 +275,7 @@
   <aside class="music-player" aria-label="Currently listening mini-player">
     <button class="music-player-toggle" type="button" aria-label="Open currently listening player" aria-expanded="false" aria-controls="music-player-card">
       <span class="compact-art-wrap" aria-hidden="true">
-        <span class="vinyl-disc vinyl-disc-compact">
-          <span class="vinyl-center">
-            <img class="album-cover-placeholder" data-spotify-album-art="compact" alt="" />
-          </span>
-        </span>
+        <img class="compact-album-art" data-spotify-album-art="compact" alt="" />
       </span>
       <span class="compact-track-copy">
         <span class="compact-status" data-spotify-status="compact">Currently Listening</span>
@@ -296,16 +292,12 @@
       </div>
       <div class="music-player-body">
         <div class="album-placeholder">
-          <span class="vinyl-disc vinyl-disc-card">
-            <span class="vinyl-center">
-              <img class="album-cover-placeholder" data-spotify-album-art="expanded" alt="" />
-            </span>
-          </span>
+          <img class="expanded-album-art" data-spotify-album-art="expanded" alt="" />
         </div>
         <div class="music-player-copy">
           <p class="track-title" data-spotify-title="expanded">Song title coming soon</p>
-          <p class="track-meta" data-spotify-meta>Artist placeholder · Album placeholder</p>
-          <p class="track-status" data-spotify-status>Live Spotify connection coming soon</p>
+          <p class="track-meta" data-spotify-meta="expanded">Artist placeholder · Album placeholder</p>
+          <p class="track-status" data-spotify-status>Loading Spotify</p>
           <a class="spotify-placeholder spotify-link is-hidden" data-spotify-link href="#" target="_blank" rel="noopener noreferrer">Open in Spotify</a>
         </div>
       </div>

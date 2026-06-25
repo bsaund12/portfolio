@@ -77,7 +77,7 @@ if (musicPlayer && musicPlayerToggle && musicPlayerClose && !window.__portfolioM
   const compactMeta = musicPlayer.querySelector('[data-spotify-meta="compact"]');
   const compactStatus = musicPlayer.querySelector('[data-spotify-status="compact"]');
   const expandedTitle = musicPlayer.querySelector('[data-spotify-title="expanded"]');
-  const expandedMeta = musicPlayer.querySelector('[data-spotify-meta]');
+  const expandedMeta = musicPlayer.querySelector('[data-spotify-meta="expanded"]');
   const statusHeading = musicPlayer.querySelector('[data-spotify-status-heading]');
   const statusText = musicPlayer.querySelector('[data-spotify-status]');
   const spotifyLink = musicPlayer.querySelector('[data-spotify-link]');
