@@ -651,10 +651,10 @@ button:focus-visible,
 .music-player-toggle {
   display: grid;
   justify-items: center;
-  gap: 0.45rem;
-  width: min(7.8rem, 100%);
+  gap: 0.52rem;
+  width: min(9.4rem, 100%);
   margin-left: auto;
-  padding: 0.55rem;
+  padding: 0.62rem;
   border: 0;
   border-radius: 1rem;
   background: rgba(13, 13, 15, 0.34);
@@ -759,7 +759,7 @@ button:focus-visible,
   position: relative;
   display: grid;
   place-items: center;
-  width: 4.65rem;
+  width: 5.75rem;
   aspect-ratio: 1;
 }
 
@@ -778,11 +778,12 @@ button:focus-visible,
 
 .compact-track-copy {
   display: grid;
-  gap: 0.12rem;
+  gap: 0.1rem;
   width: 100%;
   min-width: 0;
 }
 
+.compact-status,
 .compact-title,
 .compact-artist {
   display: block;
@@ -792,16 +793,25 @@ button:focus-visible,
   white-space: nowrap;
 }
 
+.compact-status {
+  color: var(--violet-soft);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
 .compact-title {
   color: var(--text);
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.28;
 }
 
 .compact-artist {
   color: var(--muted);
-  font-size: 0.74rem;
+  font-size: 0.76rem;
   line-height: 1.35;
 }
 
@@ -836,8 +846,8 @@ button:focus-visible,
 }
 
 .vinyl-disc-compact {
-  width: 4.45rem;
-  height: 4.45rem;
+  width: 5.45rem;
+  height: 5.45rem;
 }
 
 .vinyl-disc-card {
@@ -852,6 +862,10 @@ button:focus-visible,
   border-radius: 0.28rem;
   background: linear-gradient(135deg, var(--violet), var(--violet-soft));
   box-shadow: 0 0 0 3px rgba(13, 13, 15, 0.78);
+}
+
+.vinyl-disc-compact .vinyl-center {
+  inset: 29%;
 }
 
 .track-title {
@@ -987,16 +1001,16 @@ button:focus-visible,
   }
 
   .music-player-toggle {
-    width: min(7.25rem, 100%);
+    width: min(8.45rem, 100%);
   }
 
   .compact-art-wrap {
-    width: 4.25rem;
+    width: 5.05rem;
   }
 
   .vinyl-disc-compact {
-    width: 4rem;
-    height: 4rem;
+    width: 4.78rem;
+    height: 4.78rem;
   }
 
   .music-player-body {

@@ -74,7 +74,8 @@ if (musicPlayer && musicPlayerToggle && musicPlayerClose && !window.__portfolioM
   musicPlayerClose.addEventListener('click', () => setMusicPlayerExpanded(false));
 
   const compactTitle = musicPlayer.querySelector('[data-spotify-title="compact"]');
-  const compactArtist = musicPlayer.querySelector('[data-spotify-artist="compact"]');
+  const compactMeta = musicPlayer.querySelector('[data-spotify-meta="compact"]');
+  const compactStatus = musicPlayer.querySelector('[data-spotify-status="compact"]');
   const expandedTitle = musicPlayer.querySelector('[data-spotify-title="expanded"]');
   const expandedMeta = musicPlayer.querySelector('[data-spotify-meta]');
   const statusHeading = musicPlayer.querySelector('[data-spotify-status-heading]');
@@ -119,7 +120,8 @@ if (musicPlayer && musicPlayerToggle && musicPlayerClose && !window.__portfolioM
     musicPlayer.classList.remove('is-playing');
 
     if (compactTitle) compactTitle.textContent = 'Spotify unavailable';
-    if (compactArtist) compactArtist.textContent = 'Check back soon';
+    if (compactMeta) compactMeta.textContent = 'Check back soon';
+    if (compactStatus) compactStatus.textContent = 'Music Unavailable';
     if (statusHeading) statusHeading.textContent = 'Music Unavailable';
     if (statusText) statusText.textContent = 'Spotify connection unavailable';
 
@@ -135,7 +137,8 @@ if (musicPlayer && musicPlayerToggle && musicPlayerClose && !window.__portfolioM
     musicPlayer.classList.toggle('is-playing', Boolean(track.isPlaying));
 
     if (compactTitle) compactTitle.textContent = title;
-    if (compactArtist) compactArtist.textContent = artist;
+    if (compactMeta) compactMeta.textContent = `${artist} · ${album}`;
+    if (compactStatus) compactStatus.textContent = status;
     if (expandedTitle) expandedTitle.textContent = title;
     if (expandedMeta) expandedMeta.textContent = `${artist} · ${album}`;
     if (statusHeading) statusHeading.textContent = status;
