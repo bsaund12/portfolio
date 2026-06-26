@@ -21,8 +21,8 @@ if (dustCanvas && !reduceMotion) {
         count: 64,
         minRadius: 0.35,
         radiusRange: 1,
-        minAlpha: 0.12,
-        alphaRange: 0.2,
+        minAlpha: 0.04,
+        alphaRange: 0.09,
         maxSpeedX: 0.03,
         minSpeedY: 0.014,
         speedYRange: 0.031
@@ -33,8 +33,8 @@ if (dustCanvas && !reduceMotion) {
       count: 128,
       minRadius: 0.45,
       radiusRange: 1.4,
-      minAlpha: 0.14,
-      alphaRange: 0.24,
+      minAlpha: 0.05,
+      alphaRange: 0.11,
       maxSpeedX: 0.035,
       minSpeedY: 0.018,
       speedYRange: 0.042
@@ -115,7 +115,7 @@ if (dustCanvas && !reduceMotion) {
       if (particle.x > width + 8) particle.x = -8;
 
       ctx.beginPath();
-      ctx.fillStyle = `rgba(245, 242, 234, ${particle.alpha})`;
+      ctx.fillStyle = `rgba(17, 17, 17, ${particle.alpha})`;
       ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
       ctx.fill();
     });

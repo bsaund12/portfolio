@@ -4,15 +4,15 @@
 
 /* ---------- THEME COLORS ---------- */
 :root {
-  --bg: #070707;
-  --surface: #0E0E0E;
-  --surface-soft: #121212;
-  --surface-strong: #181818;
-  --text: #F5F2EA;
-  --muted: #B9B6AE;
-  --faint: #7E7A72;
-  --line: rgba(245, 242, 234, 0.14);
-  --line-strong: rgba(245, 242, 234, 0.28);
+  --bg: #FAF7F3;
+  --surface: #F4F0EA;
+  --surface-soft: #F4F0EA;
+  --surface-strong: #EDE8E0;
+  --text: #111111;
+  --muted: #66615A;
+  --faint: #827C73;
+  --line: rgba(17, 17, 17, 0.18);
+  --line-strong: rgba(17, 17, 17, 0.34);
   --shadow: none;
   --font-display: 'Clash Display', 'IBM Plex Sans', system-ui, sans-serif;
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -60,7 +60,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(7, 7, 7, 0.88);
+  background: rgba(250, 247, 243, 0.88);
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(12px);
 }
@@ -174,7 +174,7 @@ a:hover {
 a:focus-visible,
 button:focus-visible,
 .site-header .nav-links a:focus-visible {
-  outline: 2px solid rgba(245, 242, 234, 0.9);
+  outline: 2px solid rgba(17, 17, 17, 0.7);
   outline-offset: 3px;
   border-radius: var(--radius-sm);
 }
@@ -201,7 +201,7 @@ button:focus-visible,
   min-height: 31rem;
   padding: 3.25rem 2.5rem 3rem;
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.015);
+  background: rgba(244, 240, 234, 0.38);
   box-shadow: none;
   border: 1px solid var(--line);
   overflow: hidden;
@@ -283,13 +283,13 @@ button:focus-visible,
 
 .button-primary:hover,
 .button-primary:focus-visible {
-  background: #FFFFFF;
+  background: #111111;
   box-shadow: none;
 }
 
 .button-secondary:hover,
 .button-secondary:focus-visible {
-  background: rgba(245, 242, 234, 0.06);
+  background: rgba(17, 17, 17, 0.05);
   border-color: var(--line-strong);
   box-shadow: none;
 }
@@ -306,31 +306,15 @@ button:focus-visible,
 .portrait-ring {
   position: relative;
   z-index: 2;
-  width: clamp(15rem, 28vw, 20.5rem);
+  width: clamp(13rem, 24vw, 18rem);
   aspect-ratio: 1;
   padding: 0.45rem;
   border-radius: 50%;
   background: var(--line-strong);
   box-shadow:
     0 0 0 1px var(--line),
-    0 18px 42px rgba(0, 0, 0, 0.38);
+    0 18px 42px rgba(17, 17, 17, 0.12);
   animation: portraitDrift 9s ease-in-out infinite;
-}
-
-.portrait-ring::before,
-.portrait-ring::after {
-  content: '';
-  position: absolute;
-  inset: -0.95rem;
-  z-index: -1;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-}
-
-.portrait-ring::after {
-  inset: -1.75rem;
-  border-color: rgba(245, 242, 234, 0.08);
-  filter: blur(0.2px);
 }
 
 .hero-portrait {
@@ -354,8 +338,8 @@ button:focus-visible,
   inset: 0;
   border-radius: inherit;
   background:
-    linear-gradient(90deg, transparent, rgba(245, 242, 234, 0.18), rgba(126, 122, 114, 0.12), transparent),
-    repeating-linear-gradient(90deg, transparent 0 1.1rem, rgba(245, 243, 238, 0.18) 1.1rem 1.16rem, transparent 1.16rem 2.2rem);
+    linear-gradient(90deg, transparent, rgba(17, 17, 17, 0.1), rgba(130, 124, 115, 0.08), transparent),
+    repeating-linear-gradient(90deg, transparent 0 1.1rem, rgba(17, 17, 17, 0.08) 1.1rem 1.16rem, transparent 1.16rem 2.2rem);
   mask-image: radial-gradient(ellipse at center, #000 0 44%, transparent 68%);
 }
 
@@ -379,53 +363,6 @@ button:focus-visible,
   animation: waveSlide 14s ease-in-out infinite reverse;
 }
 
-.equalizer {
-  position: absolute;
-  right: 1.1rem;
-  bottom: 3.2rem;
-  z-index: 1;
-  display: flex;
-  align-items: end;
-  gap: 0.42rem;
-  height: 5.5rem;
-  opacity: 0.22;
-  pointer-events: none;
-}
-
-.equalizer span {
-  display: block;
-  width: 0.42rem;
-  min-height: 1.4rem;
-  border-radius: 999px;
-  background: rgba(245, 242, 234, 0.58);
-  animation: equalize 5.8s ease-in-out infinite;
-}
-
-.equalizer span:nth-child(1) {
-  height: 42%;
-  animation-delay: -0.9s;
-}
-
-.equalizer span:nth-child(2) {
-  height: 72%;
-  animation-delay: -2.1s;
-}
-
-.equalizer span:nth-child(3) {
-  height: 52%;
-  animation-delay: -1.4s;
-}
-
-.equalizer span:nth-child(4) {
-  height: 86%;
-  animation-delay: -3.2s;
-}
-
-.equalizer span:nth-child(5) {
-  height: 48%;
-  animation-delay: -2.7s;
-}
-
 @keyframes portraitDrift {
   0%, 100% {
     transform: translateY(0);
@@ -443,16 +380,6 @@ button:focus-visible,
 
   50% {
     translate: 10px 3px;
-  }
-}
-
-@keyframes equalize {
-  0%, 100% {
-    transform: scaleY(0.84);
-  }
-
-  50% {
-    transform: scaleY(1.08);
   }
 }
 
@@ -535,7 +462,7 @@ button:focus-visible,
 .outside-card {
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.018);
+  background: rgba(244, 240, 234, 0.44);
   padding: 1.35rem;
   box-shadow: none;
   transition: border-color 180ms ease, background 180ms ease;
@@ -546,7 +473,7 @@ button:focus-visible,
 .skills-card:hover,
 .outside-card:hover {
   border-color: var(--line-strong);
-  background: rgba(245, 242, 234, 0.035);
+  background: rgba(237, 232, 224, 0.5);
 }
 
 .project-card h3,
@@ -596,7 +523,7 @@ button:focus-visible,
 }
 
 .experience-card-secondary {
-  background: rgba(255, 255, 255, 0.012);
+  background: rgba(237, 232, 224, 0.36);
   border-color: var(--line);
 }
 
@@ -613,7 +540,7 @@ button:focus-visible,
 }
 
 .skills-card {
-  background: rgba(255, 255, 255, 0.012);
+  background: rgba(244, 240, 234, 0.36);
 }
 
 .outside-grid {
@@ -625,7 +552,7 @@ button:focus-visible,
   grid-column: 1 / -1;
   grid-row: auto;
   border-color: var(--line-strong);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(244, 240, 234, 0.5);
   box-shadow: none;
 }
 
@@ -722,7 +649,12 @@ button:focus-visible,
   text-align: center;
   color: var(--text);
   cursor: pointer;
-  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+  transition:
+    opacity 180ms ease,
+    visibility 0s linear,
+    transform 380ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .music-player-toggle:hover,
@@ -744,10 +676,15 @@ button:focus-visible,
   border-radius: var(--radius-md);
   background: rgba(10, 10, 10, 0.96);
   box-shadow: none;
+  color: #F5F2EA;
   opacity: 0;
-  transform: translateY(0.6rem) scale(0.98);
+  transform: translate(0.5rem, 1.4rem) scale(0.94);
+  transform-origin: bottom right;
   visibility: hidden;
-  transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+  transition:
+    opacity 360ms ease,
+    transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    visibility 360ms ease;
 }
 
 .music-player.is-expanded .music-player-card {
@@ -759,7 +696,11 @@ button:focus-visible,
 .music-player.is-expanded .music-player-toggle {
   opacity: 0;
   visibility: hidden;
-  transform: scale(0.92);
+  transform: translateY(0.25rem) scale(0.9);
+  transition:
+    opacity 180ms ease 220ms,
+    transform 380ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    visibility 0s linear 400ms;
 }
 
 .music-player-header {
@@ -775,7 +716,7 @@ button:focus-visible,
   font-size: var(--step--1);
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--faint);
+  color: #B9B6AE;
 }
 
 .music-player-close {
@@ -785,10 +726,10 @@ button:focus-visible,
   width: 2rem;
   height: 2rem;
   padding: 0;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(245, 242, 234, 0.18);
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.04);
-  color: var(--text);
+  color: #F5F2EA;
   cursor: pointer;
   font: inherit;
   line-height: 1;
@@ -798,7 +739,7 @@ button:focus-visible,
 .music-player-close:hover,
 .music-player-close:focus-visible {
   background: rgba(245, 242, 234, 0.08);
-  border-color: var(--line-strong);
+  border-color: rgba(245, 242, 234, 0.34);
   transform: translateY(-1px);
 }
 
@@ -824,6 +765,12 @@ button:focus-visible,
   place-items: center;
   width: 5.75rem;
   aspect-ratio: 1;
+  transform-origin: center;
+  transition: transform 380ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.music-player.is-expanded .compact-art-wrap {
+  transform: rotate(70deg) scale(0.9);
 }
 
 .compact-album-art,
@@ -910,20 +857,21 @@ button:focus-visible,
 
 .track-title {
   margin-bottom: 0.2rem;
-  color: var(--text);
+  color: #F5F2EA;
   font-weight: 600;
   line-height: 1.35;
 }
 
 .track-meta {
   margin-bottom: 0.32rem;
+  color: #B9B6AE;
   font-size: var(--step--1);
   line-height: 1.45;
 }
 
 .track-status {
   margin-bottom: 0.7rem;
-  color: var(--muted);
+  color: #B9B6AE;
   font-family: var(--font-mono);
   font-size: var(--step--1);
   line-height: 1.45;
@@ -934,10 +882,10 @@ button:focus-visible,
   align-items: center;
   width: fit-content;
   padding: 0.4rem 0.58rem;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(245, 242, 234, 0.18);
   border-radius: var(--radius-sm);
   background: transparent;
-  color: var(--muted);
+  color: #B9B6AE;
   font-size: var(--step--1);
   line-height: 1.2;
 }
@@ -948,8 +896,8 @@ button:focus-visible,
 
 .spotify-link:hover,
 .spotify-link:focus-visible {
-  color: var(--text);
-  border-color: var(--line-strong);
+  color: #F5F2EA;
+  border-color: rgba(245, 242, 234, 0.34);
   background: rgba(245, 242, 234, 0.06);
 }
 
@@ -994,12 +942,7 @@ button:focus-visible,
   }
 
   .portrait-ring {
-    width: clamp(13.5rem, 56vw, 18rem);
-  }
-
-  .equalizer {
-    right: 8%;
-    bottom: 2.1rem;
+    width: clamp(12rem, 50vw, 16.5rem);
   }
 
   .audio-wave {
