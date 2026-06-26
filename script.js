@@ -19,10 +19,10 @@ if (dustCanvas && !reduceMotion) {
     if (window.innerWidth < 700) {
       return {
         count: 64,
-        minRadius: 0.35,
-        radiusRange: 1,
-        minAlpha: 0.04,
-        alphaRange: 0.09,
+        minRadius: 0.45,
+        radiusRange: 1.2,
+        minAlpha: 0.09,
+        alphaRange: 0.14,
         maxSpeedX: 0.03,
         minSpeedY: 0.014,
         speedYRange: 0.031
@@ -31,10 +31,10 @@ if (dustCanvas && !reduceMotion) {
 
     return {
       count: 128,
-      minRadius: 0.45,
-      radiusRange: 1.4,
-      minAlpha: 0.05,
-      alphaRange: 0.11,
+      minRadius: 0.55,
+      radiusRange: 1.55,
+      minAlpha: 0.11,
+      alphaRange: 0.17,
       maxSpeedX: 0.035,
       minSpeedY: 0.018,
       speedYRange: 0.042
@@ -46,6 +46,14 @@ if (dustCanvas && !reduceMotion) {
   let dustSettings = getDustSettings();
   let resizeObserver;
   let animationFrameId;
+  let activeStreak = null;
+  let nextStreakAt = 0;
+
+  const getRandomBetween = (min, max) => Math.random() * (max - min) + min;
+
+  const scheduleNextStreak = (now) => {
+    nextStreakAt = now + getRandomBetween(8000, 15000);
+  };
 
   const getDocumentHeight = () => Math.max(
     document.body.scrollHeight,
@@ -86,7 +94,117 @@ if (dustCanvas && !reduceMotion) {
     }
   };
 
+  const getContentAvoidRects = () => {
+    const selectors = [
+      '.site-header',
+      '.brand',
+      '.nav-links',
+      '.hero-content',
+      '.hero-visual',
+      '.section-heading',
+      '.project-card',
+      '.experience-card',
+      '.skills-card',
+      '.outside-card',
+      '.focus-card',
+      '.contact-links',
+      '.button',
+      '.music-player',
+      'h1',
+      'h2',
+      'h3',
+      'p',
+      'li'
+    ];
+
+    return Array.from(document.querySelectorAll(selectors.join(','))).map((element) => {
+      const rect = element.getBoundingClientRect();
+      return {
+        left: rect.left + window.scrollX - 52,
+        right: rect.right + window.scrollX + 52,
+        top: rect.top + window.scrollY - 52,
+        bottom: rect.bottom + window.scrollY + 52
+      };
+    });
+  };
+
+  const rectsOverlap = (first, second) => (
+    first.left < second.right &&
+    first.right > second.left &&
+    first.top < second.bottom &&
+    first.bottom > second.top
+  );
+
+  const canPlaceStreak = (streak, avoidRects) => {
+    const endX = streak.x + Math.cos(streak.angle) * streak.travel;
+    const endY = streak.y + Math.sin(streak.angle) * streak.travel;
+    const bounds = {
+      left: Math.min(streak.x, endX) - streak.length - 36,
+      right: Math.max(streak.x, endX) + streak.length + 36,
+      top: Math.min(streak.y, endY) - streak.length - 36,
+      bottom: Math.max(streak.y, endY) + streak.length + 36
+    };
+
+    return !avoidRects.some((rect) => rectsOverlap(bounds, rect));
+  };
+
+  const createStreak = (now) => {
+    const avoidRects = getContentAvoidRects();
+
+    for (let attempt = 0; attempt < 28; attempt += 1) {
+      const angleDegrees = (Math.random() < 0.5 ? -1 : 1) * getRandomBetween(28, 48);
+      const angle = angleDegrees * (Math.PI / 180);
+      const streak = {
+        x: getRandomBetween(24, Math.max(25, width - 24)),
+        y: getRandomBetween(24, Math.max(25, height - 24)),
+        angle,
+        startTime: now,
+        duration: getRandomBetween(650, 900),
+        length: getRandomBetween(40, 100),
+        travel: getRandomBetween(70, 140),
+        alpha: getRandomBetween(0.08, 0.18)
+      };
+
+      if (canPlaceStreak(streak, avoidRects)) return streak;
+    }
+
+    return null;
+  };
+
+  const drawStreak = (streak, now) => {
+    const progress = Math.min((now - streak.startTime) / streak.duration, 1);
+    const fade = Math.sin(progress * Math.PI);
+    const headX = streak.x + Math.cos(streak.angle) * streak.travel * progress;
+    const headY = streak.y + Math.sin(streak.angle) * streak.travel * progress;
+    const segmentCount = 7;
+
+    for (let index = 0; index < segmentCount; index += 1) {
+      const startOffset = (index / segmentCount) * streak.length;
+      const endOffset = ((index + 1) / segmentCount) * streak.length;
+      const segmentAlpha = streak.alpha * fade * (1 - index / segmentCount);
+      const lineWidth = 1.15 - (index / segmentCount) * 0.8;
+
+      ctx.beginPath();
+      ctx.strokeStyle = `rgba(17, 17, 17, ${segmentAlpha})`;
+      ctx.lineWidth = Math.max(lineWidth, 0.25);
+      ctx.lineCap = 'round';
+      ctx.moveTo(
+        headX - Math.cos(streak.angle) * startOffset,
+        headY - Math.sin(streak.angle) * startOffset
+      );
+      ctx.lineTo(
+        headX - Math.cos(streak.angle) * endOffset,
+        headY - Math.sin(streak.angle) * endOffset
+      );
+      ctx.stroke();
+    }
+
+    if (progress >= 1) activeStreak = null;
+  };
+
   const drawDust = () => {
+    const now = performance.now();
+
     ctx.clearRect(0, 0, width, height);
 
     particles.forEach((particle) => {
@@ -120,11 +238,21 @@ if (dustCanvas && !reduceMotion) {
       ctx.fill();
     });
 
+    if (!activeStreak && now >= nextStreakAt) {
+      activeStreak = createStreak(now);
+      scheduleNextStreak(now);
+    }
+
+    if (activeStreak) {
+      drawStreak(activeStreak, now);
+    }
+
     animationFrameId = window.requestAnimationFrame(drawDust);
   };
 
   resizeDustCanvas();
   seedParticles();
+  scheduleNextStreak(performance.now());
   drawDust();
 
   const handleDustResize = () => {
