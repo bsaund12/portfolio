@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>About B.J. Saunders</title>
+  <meta name="description" content="A personal about page for B.J. Saunders, focused on the interests and routines behind the portfolio." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="about-page">
+  <div class="page-transition-overlay" aria-hidden="true"></div>
+
+  <main class="about-page-shell">
+    <a class="about-page-back" href="index.html" data-return-transition>← Back to Portfolio</a>
+
+    <section class="about-page-hero" aria-labelledby="about-page-title">
+      <div class="about-page-hero-copy">
+        <p class="about-page-eyebrow">BEYOND THE CODE</p>
+        <h1 id="about-page-title">More than the work.</h1>
+        <p class="about-page-copy">
+          I build software, but the habits behind it come from learning, training, climbing,
+          and always having something playing in the background.
+        </p>
+        <p class="about-page-secondary">
+          This is the side of me that does not fit neatly inside a résumé.
+        </p>
+      </div>
+
+      <figure class="about-page-portrait">
+        <img
+          src="assets/images/bj-headshot.png"
+          alt="B.J. Saunders"
+        />
+      </figure>
+    </section>
+
+    <section class="about-section about-section-music" aria-labelledby="about-music-title">
+      <p class="about-section-label">01 / MUSIC</p>
+      <div class="about-section-body">
+        <h2 id="about-music-title">A soundtrack to the work.</h2>
+        <p>
+          Music is part of how I reset, focus, and keep ideas moving. The albums in rotation
+          change often, but there is almost always something playing while I build.
+        </p>
+        <div
+          class="about-album-showcase"
+          data-album-showcase
+          aria-label="Recently played albums"
+        >
+          <p class="about-album-status" data-album-status aria-live="polite">
+            Loading recent albums…
+          </p>
+
+          <div class="about-album-frame">
+            <button
+              class="about-album-nav about-album-nav-prev"
+              type="button"
+              aria-label="Show previous albums"
+              data-album-prev
+              disabled
+            >
+              <span aria-hidden="true">←</span>
+            </button>
+
+            <div
+              class="about-album-viewport"
+              data-album-viewport
+              aria-label="Recently played album covers"
+              tabindex="0"
+            >
+              <div class="about-album-track" data-album-track role="list"></div>
+            </div>
+
+            <button
+              class="about-album-nav about-album-nav-next"
+              type="button"
+              aria-label="Show next albums"
+              data-album-next
+              disabled
+            >
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" aria-labelledby="about-training-title">
+      <p class="about-section-label">02 / TRAINING</p>
+      <div class="about-section-body">
+        <h2 id="about-training-title">Consistency outside the screen.</h2>
+        <p>
+          Training gives me structure. It is where I practice showing up, staying patient
+          with progress, and doing the work even when motivation is not the main thing
+          carrying me.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-section" aria-labelledby="about-climbing-title">
+      <p class="about-section-label">03 / ROCK CLIMBING</p>
+      <div class="about-section-body">
+        <h2 id="about-climbing-title">Problem-solving with no shortcut.</h2>
+        <p>
+          Climbing is a different kind of puzzle: read the route, commit to a move, miss
+          sometimes, adjust, and try again. That process feels familiar when I am building
+          or debugging something difficult.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-section about-principles" aria-labelledby="about-principles-title">
+      <p class="about-section-label">04 / HOW I THINK</p>
+      <div class="about-section-body">
+        <h2 id="about-principles-title">The principles I keep close.</h2>
+        <ol class="about-principles-list">
+          <li>Learn systems, not just steps.</li>
+          <li>Build things that are useful.</li>
+          <li>Get better through feedback and iteration.</li>
+          <li>Stay curious long enough to finish what I start.</li>
+        </ol>
+      </div>
+    </section>
+
+    <p class="about-page-closing">
+      The work is professional. The person behind it is always growing.
+    </p>
+  </main>
+
+  <script>
+    (() => {
+      const returnLink = document.querySelector('[data-return-transition]');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!returnLink) return;
+
+      let isReturnTransitioning = false;
+
+      window.addEventListener('pageshow', () => {
+        isReturnTransitioning = false;
+        document.body.classList.remove('is-return-transitioning');
+      });
+
+      returnLink.addEventListener('click', (event) => {
+        const shouldUseDefaultNavigation = (
+          reduceMotion ||
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey ||
+          returnLink.target
+        );
+
+        if (shouldUseDefaultNavigation) return;
+
+        event.preventDefault();
+
+        if (isReturnTransitioning) return;
+
+        isReturnTransitioning = true;
+        document.body.classList.add('is-return-transitioning');
+
+        window.setTimeout(() => {
+          window.location.href = 'index.html?from=about';
+        }, 760);
+      });
+    })();
+  </script>
+  <script src="about.js" defer></script>
+</body>
+</html>
