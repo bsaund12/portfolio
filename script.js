@@ -292,6 +292,68 @@ if (dustCanvas && !reduceMotion) {
   }
 }
 
+// Reveal the homepage when returning from the personal about page.
+const returnParams = new URLSearchParams(window.location.search);
+
+if (returnParams.get('from') === 'about') {
+  const cleanReturnUrl = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('from');
+    const cleanSearch = url.searchParams.toString();
+    const cleanUrl = `${url.pathname}${cleanSearch ? `?${cleanSearch}` : ''}${url.hash}`;
+    window.history.replaceState(null, '', cleanUrl);
+  };
+
+  if (reduceMotion) {
+    cleanReturnUrl();
+  } else {
+    document.documentElement.classList.add('is-returning-from-about');
+
+    window.setTimeout(() => {
+      document.documentElement.classList.remove('is-returning-from-about');
+      cleanReturnUrl();
+    }, 900);
+  }
+}
+
+// Page transition for the hero portrait link.
+const portraitAboutLink = document.querySelector('.portrait-link[href="about.html"]');
+
+if (portraitAboutLink) {
+  let isPageTransitioning = false;
+
+  window.addEventListener('pageshow', () => {
+    isPageTransitioning = false;
+    document.body.classList.remove('is-page-transitioning');
+  });
+
+  portraitAboutLink.addEventListener('click', (event) => {
+    const shouldUseDefaultNavigation = (
+      reduceMotion ||
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      portraitAboutLink.target
+    );
+
+    if (shouldUseDefaultNavigation) return;
+
+    event.preventDefault();
+
+    if (isPageTransitioning) return;
+
+    isPageTransitioning = true;
+    document.body.classList.add('is-page-transitioning');
+
+    window.setTimeout(() => {
+      window.location.href = portraitAboutLink.href;
+    }, 760);
+  });
+}
+
 // Smooth scroll for same-page section links.
 document.querySelectorAll('[data-scroll], a[href^="#"]').forEach((el) => {
   el.addEventListener('click', (e) => {

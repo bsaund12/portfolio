@@ -6,9 +6,18 @@
   <meta name="description" content="B.J. Saunders — Computer Science student focused on application development and cybersecurity. Portfolio showcasing projects, experience, and contact information." />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    if (
+      new URLSearchParams(window.location.search).get('from') === 'about' &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      document.documentElement.classList.add('is-returning-from-about');
+    }
+  </script>
 </head>
 <body>
   <canvas class="ambient-dust" aria-hidden="true"></canvas>
+  <div class="page-transition-overlay" aria-hidden="true"></div>
 
   <header class="site-header">
     <div class="header-inner">
@@ -54,17 +63,19 @@
         </div>
       </div>
 
-      <div class="hero-visual" aria-hidden="true">
+      <div class="hero-visual">
         <div class="audio-wave audio-wave-one"></div>
         <div class="audio-wave audio-wave-two"></div>
 
-        <div class="portrait-ring">
-          <img
-            src="assets/images/bj-headshot.png"
-            alt=""
-            class="hero-portrait"
-          />
-        </div>
+        <a class="portrait-link" href="about.html" aria-label="Learn more about B.J. outside of code">
+          <div class="portrait-ring">
+            <img
+              src="assets/images/bj-headshot.png"
+              alt=""
+              class="hero-portrait"
+            />
+          </div>
+        </a>
       </div>
     </section>
 
