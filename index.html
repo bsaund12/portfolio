@@ -26,10 +26,10 @@
       <nav class="nav-links" aria-label="Primary">
         <a href="#home">Home</a>
         <a href="#current-focus">Focus</a>
+        <a href="#certifications">Certifications</a>
         <a href="#projects">Projects</a>
         <a href="#experience">Experience</a>
         <a href="#skills">Skills</a>
-        <a href="#outside">Outside</a>
         <a href="#contact">Contact</a>
       </nav>
     </div>
@@ -76,6 +76,16 @@
             />
           </div>
         </a>
+
+        <div class="portrait-invitation" aria-hidden="true">
+          <span class="portrait-invitation-copy">
+            <span class="portrait-invitation-label">BEYOND THE CODE</span>
+            <span class="portrait-invitation-text">
+              <span class="portrait-invitation-arrow">↗</span>
+              Click to explore more about me
+            </span>
+          </span>
+        </div>
       </div>
     </section>
 
@@ -114,25 +124,44 @@
       </div>
     </section>
 
-    <section id="about" class="about block reveal">
+    <section id="certifications" class="certifications block reveal">
       <div class="section-heading">
-        <h2>About Me</h2>
+        <h2>Learning & Certifications</h2>
+        <p class="section-text">
+          Cloud fundamentals and technical credentials I am actively building toward.
+        </p>
       </div>
 
-      <p>
-        I’m a rising senior at UNC Charlotte who enjoys technology because there is always
-        something new to learn, build, and improve. I am drawn to problems where I do not
-        already have all the answers, because those are often the experiences that help me
-        grow the fastest.
-      </p>
+      <article class="certification-item">
+        <div class="certification-visual" aria-hidden="true">
+          <div class="certification-visual-grid"></div>
+          <div class="certification-visual-content">
+            <span class="certification-visual-kicker">AWS</span>
+            <span class="certification-visual-title">Cloud Practitioner</span>
+            <span class="certification-visual-level">Foundational</span>
+            <span class="certification-visual-status">In Progress</span>
+          </div>
+        </div>
 
-      <p>
-        I work well in collaborative environments where I can learn from people with more
-        experience, understand how they approach problems, and adapt those lessons into my
-        own way of thinking. Long term, I want to become an engineer people can depend on,
-        while building financial stability and eventually being able to provide for my
-        family and help others.
-      </p>
+        <div class="certification-copy">
+          <p class="certification-status">In Progress</p>
+          <h3>AWS Certified Cloud Practitioner</h3>
+          <p class="certification-detail">Foundational • CLF-C02</p>
+          <p>
+            Building foundational knowledge of AWS Cloud concepts, core services, security,
+            architecture, pricing, and support so I can design and discuss cloud-based
+            systems with more confidence.
+          </p>
+          <a
+            class="button button-primary certification-link"
+            href="https://aws.amazon.com/certification/certified-cloud-practitioner/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn More
+          </a>
+        </div>
+      </article>
     </section>
 
     <section id="projects" class="projects block reveal">
@@ -331,70 +360,6 @@
       </div>
     </section>
 
-    <section id="outside" class="outside-of-code block reveal">
-      <div class="section-heading">
-        <h2>Outside of Code</h2>
-        <p class="section-text">
-          The habits and interests that help me reset, stay consistent, and keep
-          perspective.
-        </p>
-      </div>
-
-      <div class="outside-grid">
-        <article class="outside-card outside-card-featured reveal">
-          <h3>Music</h3>
-
-          <p>
-            Music is one of the biggest sources of comfort, creativity, and energy in my
-            life. It is with me when I am working out, studying, driving, or simply taking
-            time to reset. I connect with artists across different genres because great
-            music can make you feel understood, even by someone you have never met.
-          </p>
-
-          <p>
-            Music also reminds me how powerful simple things can be. Like food, it brings
-            people together across different backgrounds, experiences, and emotions. It is
-            not just something I listen to; it is a major part of how I reflect, stay
-            motivated, and connect with other people.
-          </p>
-
-          <div class="music-card-note">
-            <p class="music-card-note-label">SOUNDTRACK</p>
-            <p>Tap the record in the corner to see what I’ve been listening to.</p>
-          </div>
-        </article>
-
-        <article class="outside-card reveal">
-          <h3>Training</h3>
-
-          <p>
-            The gym helps me stay balanced. Improving physically supports the work I am
-            doing intellectually and emotionally too, giving me structure, discipline, and
-            a way to reset.
-          </p>
-
-          <p>
-            That mindset carries into coding, reading, learning, and becoming more
-            consistent over time.
-          </p>
-        </article>
-
-        <article class="outside-card reveal">
-          <h3>Rock Climbing</h3>
-
-          <p>
-            Rock climbing makes me slow down, study the route, and trust that I can find the
-            next move even when the answer is not obvious.
-          </p>
-
-          <p>
-            I like that progress comes from patience, problem-solving, and being willing to
-            try again after missing a hold.
-          </p>
-        </article>
-      </div>
-    </section>
-
     <section id="contact" class="contact block reveal">
       <div class="section-heading">
         <h2>Contact</h2>
@@ -465,88 +430,6 @@
       </div>
     </section>
   </main>
-
-  <aside class="music-player" aria-label="Currently listening mini-player">
-    <button
-      class="music-player-toggle"
-      type="button"
-      aria-label="Open currently listening player"
-      aria-expanded="false"
-      aria-controls="music-player-card"
-    >
-      <span class="compact-art-wrap" aria-hidden="true">
-        <img
-          class="compact-album-art"
-          data-spotify-album-art="compact"
-          alt=""
-        />
-      </span>
-
-      <span class="compact-track-copy">
-        <span class="compact-status" data-spotify-status="compact">
-          SOUNDTRACK
-        </span>
-
-        <span class="compact-title" data-spotify-title="compact">
-          See what Brian’s listening to
-        </span>
-
-        <span class="compact-artist" data-spotify-meta="compact"></span>
-      </span>
-    </button>
-
-    <section
-      class="music-player-card"
-      id="music-player-card"
-      aria-labelledby="music-player-title"
-    >
-      <div class="music-player-header">
-        <h2 id="music-player-title" data-spotify-status-heading>
-          SOUNDTRACK
-        </h2>
-
-        <button
-          class="music-player-close"
-          type="button"
-          aria-label="Minimize currently listening player"
-        >
-          <span aria-hidden="true">×</span>
-        </button>
-      </div>
-
-      <div class="music-player-body">
-        <div class="album-placeholder">
-          <img
-            class="expanded-album-art"
-            data-spotify-album-art="expanded"
-            alt=""
-          />
-        </div>
-
-        <div class="music-player-copy">
-          <p class="track-title" data-spotify-title="expanded">
-            See what Brian’s listening to
-          </p>
-
-          <p class="track-meta" data-spotify-meta="expanded"></p>
-
-          <p class="track-status" data-spotify-status>
-            Open the player for recent listening activity.
-          </p>
-
-          <a
-            class="spotify-placeholder spotify-link is-hidden"
-            data-spotify-link
-            href="#"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Open in Spotify
-          </a>
-        </div>
-      </div>
-    </section>
-  </aside>
 
   <script src="script.js" defer></script>
 </body>
