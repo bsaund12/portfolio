@@ -1,12 +1,13 @@
 .about-now-playing {
   position: fixed;
+  top: clamp(1rem, 3vw, 2rem);
   right: clamp(1rem, 3vw, 2rem);
-  bottom: clamp(1rem, 3vw, 2rem);
+  bottom: auto;
   z-index: 40;
-  width: min(22rem, calc(100vw - 2rem));
+  width: min(19rem, calc(100vw - 2rem));
   opacity: 0;
   pointer-events: none;
-  transform: translateY(0.75rem);
+  transform: translateY(-0.75rem);
   transition: opacity 220ms ease, transform 220ms ease;
 }
 
@@ -196,10 +197,11 @@
 
 @media (max-width: 640px) {
   .about-now-playing {
+    top: 4.25rem;
     right: 1rem;
-    bottom: 1rem;
-    left: 1rem;
-    width: auto;
+    bottom: auto;
+    left: auto;
+    width: min(18rem, calc(100vw - 2rem));
   }
 
   .about-now-playing.is-collapsed {
