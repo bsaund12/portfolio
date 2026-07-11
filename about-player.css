@@ -1,5 +1,5 @@
 .about-now-playing {
-  position: fixed;
+  position: absolute;
   top: clamp(1rem, 3vw, 2rem);
   right: clamp(1rem, 3vw, 2rem);
   bottom: auto;
