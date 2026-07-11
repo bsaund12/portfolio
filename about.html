@@ -6,6 +6,7 @@
   <meta name="description" content="A personal about page for B.J. Saunders, focused on the interests and routines behind the portfolio." />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="about-player.css" />
 </head>
 <body class="about-page">
   <div class="page-transition-overlay" aria-hidden="true"></div>
@@ -158,7 +159,6 @@
         event.preventDefault();
 
         if (isReturnTransitioning) return;
-
         isReturnTransitioning = true;
         document.body.classList.add('is-return-transitioning');
 
@@ -169,5 +169,6 @@
     })();
   </script>
   <script src="about.js" defer></script>
+  <script src="about-player.js" defer></script>
 </body>
 </html>
