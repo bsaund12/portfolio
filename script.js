@@ -400,3 +400,45 @@ if (reduceMotion || !('IntersectionObserver' in window)) {
 
   revealElements.forEach((el) => observer.observe(el));
 }
+
+// Visitor counter — fetches and displays the atomic count from my API.
+const VISITOR_COUNT_ENDPOINT = 'https://01vqqbm7qi.execute-api.us-east-1.amazonaws.com/count';
+const VISITOR_COUNT_TIMEOUT_MS = 8000;
+
+const visitorCountElement = document.querySelector('[data-visitor-count]');
+
+if (visitorCountElement) {
+  const loadVisitorCount = async () => {
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), VISITOR_COUNT_TIMEOUT_MS);
+
+    try {
+      const response = await fetch(VISITOR_COUNT_ENDPOINT, {
+        method: 'GET',
+        cache: 'no-store',
+        headers: {
+          Accept: 'application/json'
+        },
+        signal: controller.signal
+      });
+
+      if (!response.ok) {
+        throw new Error('Visitor count request failed');
+      }
+
+      const data = await response.json();
+
+      if (!data || typeof data.count !== 'number') {
+        throw new Error('Visitor count response was malformed');
+      }
+
+      visitorCountElement.textContent = data.count.toLocaleString();
+    } catch {
+      visitorCountElement.textContent = '—';
+    } finally {
+      window.clearTimeout(timeoutId);
+    }
+  };
+
+  loadVisitorCount();
+}
