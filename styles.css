@@ -1269,3 +1269,24 @@ html.is-returning-from-about .page-transition-overlay {
     display: none;
   }
 }
+
+/* Site footer */
+.site-footer {
+  max-width: 1040px;
+  margin: 4rem auto 0;
+  padding: 2rem 1.5rem;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 0;
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+
+.site-footer [data-visitor-count] {
+  font-family: var(--font-mono);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
