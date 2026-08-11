@@ -180,6 +180,35 @@
       <div class="project-grid">
         <article class="project-card reveal">
           <div class="project-header">
+            <h3>Cloud Resume Challenge</h3>
+          </div>
+
+          <p class="project-stack">AWS, Terraform, Python, GitHub Actions</p>
+
+          <p>
+            This site runs on it: a serverless visitor counter and fully automated
+            deployment pipeline built on AWS.
+          </p>
+
+          <ul>
+            <li>
+              Serverless visitor counter: API Gateway to Lambda to DynamoDB, with the
+              count persisted across a live infrastructure migration.
+            </li>
+            <li>
+              All backend infrastructure defined in Terraform; deploys run through
+              GitHub Actions using OIDC federation rather than stored credentials.
+            </li>
+            <li>Unit tested with pytest and moto, with tests gating every deployment.</li>
+          </ul>
+
+          <div class="project-meta">
+            <span class="meta-chip">LIVE · THIS SITE</span>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-header">
             <h3>OptionScope</h3>
           </div>
 
@@ -237,28 +266,6 @@
 
           <div class="project-meta">
             <span class="meta-chip">COMPLETED · SECURITY LAB</span>
-          </div>
-        </article>
-
-        <article class="project-card reveal">
-          <div class="project-header">
-            <h3>Hash Table Library</h3>
-          </div>
-
-          <p class="project-stack">Java</p>
-
-          <p>
-            Implemented a generic Java hash table with linear probing, resizing, collision
-            handling, and key-value operations.
-          </p>
-
-          <ul>
-            <li>Explored collision handling and load-factor tradeoffs.</li>
-            <li>Practiced writing and testing core data-structure logic.</li>
-          </ul>
-
-          <div class="project-meta">
-            <span class="meta-chip">COMPLETED · ACADEMIC IMPLEMENTATION</span>
           </div>
         </article>
       </div>
@@ -352,21 +359,22 @@
         <article class="skills-card reveal">
           <h3>Databases & Cloud</h3>
           <p>
-            PostgreSQL, MySQL, Docker, Docker Compose, Vercel, GitHub Pages, AWS Cloud
-            Fundamentals
+            PostgreSQL, MySQL, Docker, Docker Compose, Vercel, AWS Lambda, DynamoDB, S3,
+            CloudFront, Route 53, API Gateway, IAM, Terraform
           </p>
         </article>
 
         <article class="skills-card reveal">
           <h3>Developer Tools</h3>
-          <p>Git, GitHub, Visual Studio Code, Xcode Simulator</p>
+          <p>Git, GitHub, Visual Studio Code, Xcode Simulator, GitHub Actions, AWS CLI</p>
         </article>
 
         <article class="skills-card reveal">
           <h3>Security Tools & Concepts</h3>
           <p>
             Kali Linux, Burp Suite, Nmap, Nikto, OWASP Juice Shop, DVWA, Penetration
-            Testing, Secure Software Development
+            Testing, Secure Software Development, IAM Policy Design, Least Privilege,
+            OIDC Federation
           </p>
         </article>
 
@@ -374,7 +382,7 @@
           <h3>Core Concepts</h3>
           <p>
             Object-Oriented Programming, Data Structures, Algorithms, Testing, Debugging,
-            API Integration
+            API Integration, Infrastructure as Code, CI/CD, Unit Testing
           </p>
         </article>
       </div>
