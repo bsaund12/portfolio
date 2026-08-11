@@ -1,50 +1,78 @@
-# Visitor Counter Lambda
+# Backend
 
-## What it does
+See the [root README](../README.md) for the site itself and local development.
 
-Atomically increments a visitor count each time the homepage is loaded and
-returns the updated count.
+## Architecture
 
-## Runtime
+**Frontend:** S3 (static hosting) → CloudFront (CDN/HTTPS) → Route 53 (DNS) → ACM
+(TLS certificate). Provisioned by hand in the AWS Console; not managed by Terraform.
 
-- Python 3.14
-- Architecture: arm64
+**Backend (visitor counter):** API Gateway HTTP API → Lambda → DynamoDB. Fully
+managed by Terraform in [`terraform/`](../terraform).
 
-## DynamoDB
+```
+browser → CloudFront/S3 (static site)
+        → GET /count → API Gateway → Lambda → DynamoDB.UpdateItem
+```
 
-- Table: `cloudresume-visitors`
-- Partition key: `id`
-- The function updates a single item with `id = "visitors"`.
+The Lambda ([`lambda_function.py`](lambda_function.py)) atomically increments a
+single DynamoDB item (`id = "visitors"`) via an `ADD` update expression and
+returns the new count as JSON.
 
-## IAM
+## Backend resources (Terraform)
 
-- Policy: `cloudresume-dynamodb-update`
-- Grants `dynamodb:UpdateItem`, scoped to the ARN of the `cloudresume-visitors`
-  table only.
+- **DynamoDB** — on-demand table, partition key `id` (String). `prevent_destroy`
+  is set so `terraform destroy` can't wipe the counter. The seed item's `count`
+  attribute uses `ignore_changes`, since the Lambda mutates it directly outside
+  of Terraform.
+- **Lambda** — Python 3.14, arm64, handler `lambda_function.lambda_handler`.
+  Reads the table name from the `TABLE_NAME` environment variable, set from
+  `var.table_name` — the table name is not hardcoded in the Python source.
+- **IAM** — role `cloudresume-lambda-exec`, assumable only by
+  `lambda.amazonaws.com`. Two policies:
+  - an inline policy granting only `dynamodb:UpdateItem`, scoped to this
+    table's ARN via a Terraform resource reference (not a hardcoded ARN)
+  - the AWS-managed `AWSLambdaBasicExecutionRole`, for CloudWatch Logs access
+- **CloudWatch Logs** — log group `/aws/lambda/<function-name>`, 14-day
+  retention.
+- **API Gateway** — HTTP API, route `GET /count`, `$default` stage with
+  auto-deploy, `AWS_PROXY` Lambda integration (payload format `2.0`). CORS is
+  configured on the API itself, not in the Lambda — don't return
+  `Access-Control-Allow-Origin` from the handler, or the duplicate header will
+  make the browser reject the response. The Lambda's resource policy scopes
+  invoke access to this specific API/stage/method/route.
 
-## Deployment
+## Deploying the backend
 
-Currently deployed by hand through the AWS Console. Terraform is planned to
-replace this manual process.
+```bash
+cd terraform
+cp terraform.tfvars.example terraform.tfvars   # fill in real values; gitignored
+terraform init
+terraform plan
+terraform apply
+```
 
-## Region
+## Deploying the frontend
 
-All resources live in `us-east-1`.
+The frontend isn't Terraform-managed. After changing a static asset:
 
-## Invocation
+```bash
+aws s3 cp script.js s3://bjsaunders.com/script.js --content-type application/javascript
+aws cloudfront create-invalidation --distribution-id <distribution-id> --paths "/script.js"
+```
 
-- API: `cloudresume-api` (HTTP API in API Gateway)
-- Route: `GET /count`
-- Payload format version: `2.0`
-- Stage: `$default` (auto-deploy enabled)
-- Invoke URL: `https://01vqqbm7qi.execute-api.us-east-1.amazonaws.com/count`
-- API Gateway is authorized to invoke this function via a resource-based policy
-  on the Lambda, with `SourceArn` scoped to this API.
+## Variables (`terraform.tfvars.example`)
 
-## CORS
+| Variable | Purpose |
+|---|---|
+| `aws_region` | AWS region all resources are deployed into. |
+| `project_name` | Prefix used when naming the Lambda, IAM role, and API. |
+| `table_name` | DynamoDB table name; also becomes the Lambda's `TABLE_NAME` env var. |
+| `lambda_runtime` | Lambda Python runtime identifier. |
+| `lambda_architecture` | Lambda instruction set architecture (`arm64` or `x86_64`). |
+| `allowed_origins` | Origins allowed via CORS on the API Gateway API. |
 
-CORS is configured **on the API Gateway**, not in this handler. Allowed origins:
-`https://bjsaunders.com` and `https://www.bjsaunders.com`. Method: `GET`. Credentials: not allowed.
+## Tests
 
-Do not return `Access-Control-Allow-Origin` from the Lambda — setting it in both
-places produces duplicate headers and the browser rejects the response.
+`backend/tests/conftest.py` sets `TABLE_NAME` before collection, since
+`lambda_function.py` reads it at import time.
