@@ -11,7 +11,7 @@ small JavaScript file for smooth scrolling, scroll-reveal effects, and the count
 
 - A recruiter-friendly single-page portfolio that lists projects, experience, skills, and contact information.
 - The homepage footer shows a live visitor count, served by a small AWS backend.
-- No frontend frameworks or build process — just static files.
+- No frontend frameworks or build process, just static files.
 
 ## Architecture
 
@@ -20,7 +20,7 @@ small JavaScript file for smooth scrolling, scroll-reveal effects, and the count
   introduced.
 - **Visitor counter:** API Gateway (HTTP API) → Lambda → DynamoDB, incrementing an
   atomic counter on each page load.
-- **Backend infrastructure is fully Terraform-managed** — see
+- **Backend infrastructure is fully Terraform-managed** : see
   [backend/README.md](backend/README.md) for the architecture detail, IAM model,
   deploy commands, and Terraform variables.
 
@@ -43,7 +43,7 @@ python3 -m http.server 8000
 # then open http://localhost:8000 in your browser
 ```
 
-Note: the visitor counter will not work locally — the API's CORS allowlist only
+Note: the visitor counter will not work locally, the API's CORS allowlist only
 permits the live domain, so requests from `localhost` or a `file://` origin are
 rejected. Everything else on the page works fine locally.
 
