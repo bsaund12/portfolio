@@ -1,0 +1,57 @@
+name: Backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend.yml"
+  pull_request:
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend.yml"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - run: pip install -r backend/requirements-dev.txt
+
+      - working-directory: backend
+        run: pytest
+
+  deploy:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::397450412703:role/cloudresume-github-backend
+          aws-region: us-east-1
+
+      - name: Package Lambda
+        working-directory: backend
+        run: zip lambda_function.zip lambda_function.py
+
+      - name: Deploy Lambda
+        working-directory: backend
+        run: |
+          aws lambda update-function-code \
+            --function-name cloudresume-visitor-counter \
+            --zip-file fileb://lambda_function.zip
+
+      - name: Wait for update to finish
+        run: aws lambda wait function-updated --function-name cloudresume-visitor-counter
