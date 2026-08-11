@@ -28,3 +28,13 @@ variable "allowed_origins" {
   type        = list(string)
   description = "List of origins allowed to call the API via CORS (e.g. the site's domain(s))."
 }
+
+variable "bucket_name" {
+  type        = string
+  description = "Name of the S3 bucket serving the static frontend (provisioned manually, not by Terraform)."
+}
+
+variable "cloudfront_distribution_id" {
+  type        = string
+  description = "ID of the CloudFront distribution in front of the frontend bucket (provisioned manually, not by Terraform)."
+}

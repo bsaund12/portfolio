@@ -4,3 +4,5 @@ table_name          = "cloudresume-visitors"                               # Dyn
 lambda_runtime      = "python3.14"                                         # Lambda runtime identifier to run lambda_function.py on
 lambda_architecture = "arm64"                                              # Lambda instruction set architecture (arm64 or x86_64)
 allowed_origins     = ["https://bjsaunders.com", "https://www.bjsaunders.com"] # origins allowed to call the API via CORS
+bucket_name         = "bjsaunders.com"                                     # S3 bucket serving the static frontend
+cloudfront_distribution_id = "EXXXXXXXXXXXXX"                              # CloudFront distribution in front of that bucket
