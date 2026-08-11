@@ -1,8 +1,9 @@
 import json
+import os
 import boto3
 
 dynamodb = boto3.resource("dynamodb")
-table = dynamodb.Table("cloudresume-visitors")
+table = dynamodb.Table(os.environ["TABLE_NAME"])
 
 def lambda_handler(event, context):
     response = table.update_item(
@@ -17,5 +18,8 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
+        "headers": {
+            "Content-Type": "application/json",
+        },
         "body": json.dumps({"count": new_count})
     }

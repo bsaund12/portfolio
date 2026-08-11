@@ -1,0 +1,15 @@
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+# .terraform.lock.hcl is intentionally tracked: it pins provider versions/checksums
+# so everyone (and CI) gets reproducible plans, per Terraform's own recommendation.
+*.tfvars
+!*.tfvars.example
+tfplan
+*.tfplan
+terraform/build/
+.terraform.tfstate.lock.info
+override.tf
+override_*.tf
+*_override.tf

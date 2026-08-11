@@ -402,7 +402,7 @@ if (reduceMotion || !('IntersectionObserver' in window)) {
 }
 
 // Visitor counter — fetches and displays the atomic count from my API.
-const VISITOR_COUNT_ENDPOINT = 'https://01vqqbm7qi.execute-api.us-east-1.amazonaws.com/count';
+const VISITOR_COUNT_ENDPOINT = 'https://7udcf08keh.execute-api.us-east-1.amazonaws.com/count';
 const VISITOR_COUNT_TIMEOUT_MS = 8000;
 
 const visitorCountElement = document.querySelector('[data-visitor-count]');

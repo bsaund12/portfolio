@@ -1,0 +1,6 @@
+aws_region          = "us-east-1"                                          # AWS region to deploy into
+project_name        = "cloudresume"                                        # short name used to prefix/tag created resources
+table_name          = "cloudresume-visitors"                               # DynamoDB table name (matches TABLE_NAME read by backend/lambda_function.py)
+lambda_runtime      = "python3.14"                                         # Lambda runtime identifier to run lambda_function.py on
+lambda_architecture = "arm64"                                              # Lambda instruction set architecture (arm64 or x86_64)
+allowed_origins     = ["https://bjsaunders.com", "https://www.bjsaunders.com"] # origins allowed to call the API via CORS
