@@ -23,6 +23,8 @@ small JavaScript file for smooth scrolling, scroll-reveal effects, and the count
 - **Backend infrastructure is fully Terraform-managed** : see
   [backend/README.md](backend/README.md) for the architecture detail, IAM model,
   deploy commands, and Terraform variables.
+- **Deploys are automated** via GitHub Actions on push to `main` — see
+  [terraform/README.md](terraform/README.md) for what's automated vs. manual.
 
 ## Technologies used
 
