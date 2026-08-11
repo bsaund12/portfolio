@@ -1,0 +1,53 @@
+name: Frontend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "styles.css"
+      - "script.js"
+      - "assets/**"
+      - ".github/workflows/frontend.yml"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::397450412703:role/cloudresume-github-frontend
+          aws-region: us-east-1
+
+      - name: Sync site to S3
+        run: |
+          aws s3 sync . s3://bjsaunders.com --delete \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
+            --exclude ".gitignore" \
+            --exclude ".venv/*" \
+            --exclude "README.md" \
+            --exclude "backend/*" \
+            --exclude "terraform/*"
+
+      - name: Create CloudFront invalidation
+        id: invalidate
+        run: |
+          INVALIDATION_ID=$(aws cloudfront create-invalidation \
+            --distribution-id E1S28MNPD506JI \
+            --paths "/*" \
+            --query "Invalidation.Id" \
+            --output text)
+          echo "id=$INVALIDATION_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for invalidation to complete
+        run: |
+          aws cloudfront wait invalidation-completed \
+            --distribution-id E1S28MNPD506JI \
+            --id "${{ steps.invalidate.outputs.id }}"
