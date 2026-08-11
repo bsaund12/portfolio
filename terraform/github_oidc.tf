@@ -70,7 +70,7 @@ resource "aws_iam_role_policy" "github_backend_deploy" {
     Statement = [
       {
         Effect   = "Allow"
-        Action   = "lambda:UpdateFunctionCode"
+        Action   = ["lambda:UpdateFunctionCode", "lambda:GetFunctionConfiguration"]
         Resource = aws_lambda_function.visitor_counter.arn
       }
     ]
