@@ -7,6 +7,10 @@ on:
       - "index.html"
       - "styles.css"
       - "script.js"
+      - "about.html"
+      - "about.js"
+      - "about-player.css"
+      - "about-player.js"
       - "assets/**"
       - ".github/workflows/frontend.yml"
 
