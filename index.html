@@ -240,20 +240,25 @@
       </figure>
 
       <div class="about-copy" data-flow-in>
-        <h2 class="section-title">Beyond<br />the code.</h2>
-        <p class="about-text">Dean's List four times, Chancellor's List twice, and studying for AWS Cloud Practitioner. There is always music on while I build.</p>
+        <h2 class="section-title">Off the<br />clock.</h2>
+        <p class="about-text">When I'm not in a terminal, I'm training, coaching kids through their first lines of code at YouCanTech, or finding a new album to put on repeat. Here's what's playing right now.</p>
 
-        <div class="now-playing">
-          <span class="eq" aria-hidden="true">
-            <span></span><span></span><span></span><span></span>
+        <!-- Live Spotify card. script.js fills it in on the real site; this
+             markup is the fallback shown locally or if the API is down.
+             It only becomes a real link (href) once a track loads. -->
+        <a class="music-card is-fallback" data-music>
+          <span class="music-art-wrap" aria-hidden="true">
+            <img class="music-art" data-music-art alt="" width="72" height="72" hidden />
           </span>
-          <span class="now-playing-text">
-            <span class="now-playing-label">NOW PLAYING</span>
-            <span class="now-playing-track">Always something on</span>
+          <span class="music-text">
+            <span class="music-label">
+              <span class="music-eq" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+              <span data-music-label>MUSIC</span>
+            </span>
+            <span class="music-track" data-music-track>Always something on</span>
+            <span class="music-artist" data-music-artist hidden></span>
           </span>
-        </div>
-
-        <a class="about-more" href="about.html">More about me ↗</a>
+        </a>
       </div>
     </section>
 

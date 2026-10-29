@@ -8,11 +8,6 @@ on:
       - "styles.css"
       - "script.js"
       - "blob.js"
-      - "about.html"
-      - "about.css"
-      - "about.js"
-      - "about-player.css"
-      - "about-player.js"
       - "assets/**"
       - ".github/workflows/frontend.yml"
 

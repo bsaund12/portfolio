@@ -516,3 +516,235 @@ if (visitorCountElement) {
     loadVisitorCount();
   }
 }
+
+// Spotify card — shows what I'm playing right now, or the last thing I played,
+// from my own API (bsaund12/portfolio-now-playing-api on Vercel). Checks every
+// 30 seconds while the tab is visible. The API only allows my real domain, so
+// anywhere else the card keeps its "MUSIC / Always something on" fallback.
+const musicCard = document.querySelector('[data-music]');
+
+if (musicCard) {
+  const NOW_PLAYING_ENDPOINT = 'https://portfolio-now-playing-api.vercel.app/api/now-playing';
+  const RECENTLY_PLAYED_ENDPOINT = 'https://portfolio-now-playing-api.vercel.app/api/recently-played';
+  const MUSIC_POLL_MS = 30000;
+  const MUSIC_TIMEOUT_MS = 8000;
+  const SWAP_MS = 200; // each half of the slide-out / slide-in
+
+  const art = musicCard.querySelector('[data-music-art]');
+  const artWrap = musicCard.querySelector('.music-art-wrap');
+  const label = musicCard.querySelector('[data-music-label]');
+  const trackName = musicCard.querySelector('[data-music-track]');
+  const artistName = musicCard.querySelector('[data-music-artist]');
+
+  let shownContent = null; // what's on the card now, to spot a real track change
+  let pollTimer = 0;
+  let refreshing = false;
+  let warned = false;
+
+  const hasText = (value) => typeof value === 'string' && value.trim().length > 0;
+
+  // The API sends artists as one string today; accept a list too, just in case.
+  const toText = (value) => {
+    if (Array.isArray(value)) return value.filter(hasText).map((item) => item.trim()).join(', ');
+    return hasText(value) ? value.trim() : '';
+  };
+
+  // Only trust URLs from the one host we expect. Anything else becomes ''.
+  const allowUrl = (value, hostname) => {
+    if (!hasText(value)) return '';
+
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' && url.hostname === hostname ? url.href : '';
+    } catch {
+      return '';
+    }
+  };
+
+  const toTrack = (data, isPlaying) => {
+    const title = toText(data && data.title);
+    const artist = toText(data && (data.artist || data.artists));
+    if (!title || !artist) return null;
+
+    return {
+      title,
+      artist,
+      album: toText(data.album),
+      art: allowUrl(data.albumArt, 'i.scdn.co'),
+      // Now-playing has a track link; recently-played only has an album link.
+      link: allowUrl(data.spotifyUrl, 'open.spotify.com') || allowUrl(data.albumUrl, 'open.spotify.com'),
+      isPlaying
+    };
+  };
+
+  const getJson = async (url) => {
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), MUSIC_TIMEOUT_MS);
+
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        cache: 'no-store',
+        headers: { Accept: 'application/json' },
+        signal: controller.signal
+      });
+      if (!response.ok) throw new Error(`${url} answered ${response.status}`);
+      return await response.json();
+    } finally {
+      window.clearTimeout(timeoutId);
+    }
+  };
+
+  // Playing right now? Use it. Otherwise fall back to the last played track.
+  const loadTrack = async () => {
+    const nowPlaying = await getJson(NOW_PLAYING_ENDPOINT);
+    const playing = nowPlaying && nowPlaying.isPlaying ? toTrack(nowPlaying, true) : null;
+    if (playing) return playing;
+
+    const recent = await getJson(RECENTLY_PLAYED_ENDPOINT);
+    const last = toTrack(recent && Array.isArray(recent.items) ? recent.items[0] : null, false);
+    if (!last) throw new Error('No track in the API response');
+    return last;
+  };
+
+  // Wait for the new cover to download so it doesn't pop in half-loaded.
+  const preload = (src) => new Promise((resolve) => {
+    if (!src) {
+      resolve();
+      return;
+    }
+    const image = new Image();
+    image.onload = resolve;
+    image.onerror = resolve;
+    image.src = src;
+  });
+
+  const slide = (from, to) => Promise.all(
+    [artWrap, trackName, artistName].map((element) => element.animate(
+      [
+        { opacity: from.opacity, transform: `translateY(${from.y}px)` },
+        { opacity: to.opacity, transform: `translateY(${to.y}px)` }
+      ],
+      { duration: SWAP_MS, easing: 'ease', fill: 'forwards' }
+    ).finished)
+  );
+
+  const clearSlides = () => {
+    [artWrap, trackName, artistName].forEach((element) => {
+      element.getAnimations().forEach((animation) => animation.cancel());
+    });
+  };
+
+  // Writes the card. Text goes in with textContent, never innerHTML, because
+  // it comes from an outside API and must never be treated as HTML.
+  const fillCard = (track) => {
+    musicCard.classList.remove('is-loading');
+    musicCard.classList.toggle('is-playing', Boolean(track && track.isPlaying));
+    musicCard.classList.toggle('is-last-played', Boolean(track && !track.isPlaying));
+    musicCard.classList.toggle('is-fallback', !track);
+
+    label.textContent = !track ? 'MUSIC' : track.isPlaying ? 'NOW PLAYING' : 'LAST PLAYED';
+    trackName.textContent = track ? track.title : 'Always something on';
+    artistName.textContent = track ? track.artist : '';
+    artistName.hidden = !track;
+
+    if (track && track.art) {
+      art.src = track.art;
+      art.alt = `Album cover for ${track.album || track.title}`;
+      art.hidden = false;
+    } else {
+      art.removeAttribute('src');
+      art.alt = '';
+      art.hidden = true;
+    }
+
+    // An <a> without href isn't a link at all, so the fallback can't be clicked.
+    if (track && track.link) {
+      musicCard.href = track.link;
+      musicCard.target = '_blank';
+      musicCard.rel = 'noopener noreferrer';
+      musicCard.setAttribute('aria-label', `Listening to ${track.title} by ${track.artist} on Spotify`);
+    } else {
+      musicCard.removeAttribute('href');
+      musicCard.removeAttribute('target');
+      musicCard.removeAttribute('rel');
+      musicCard.removeAttribute('aria-label');
+    }
+  };
+
+  const showTrack = async (track) => {
+    const content = track ? [track.title, track.artist, track.art].join('|') : 'fallback';
+    const contentChanged = content !== shownContent;
+    const wasLoading = musicCard.classList.contains('is-loading');
+
+    // Same song, maybe just playing ↔ paused: update the label and state only.
+    if (!contentChanged) {
+      fillCard(track);
+      return;
+    }
+
+    await preload(track && track.art);
+
+    if (reduceMotion) {
+      fillCard(track);
+    } else if (wasLoading || shownContent === null) {
+      fillCard(track);
+      await slide({ opacity: 0, y: 8 }, { opacity: 1, y: 0 });
+      clearSlides();
+    } else {
+      await slide({ opacity: 1, y: 0 }, { opacity: 0, y: -8 });
+      fillCard(track);
+      await slide({ opacity: 0, y: 8 }, { opacity: 1, y: 0 });
+      clearSlides();
+    }
+
+    shownContent = content;
+  };
+
+  const refreshMusic = async () => {
+    if (refreshing) return;
+    refreshing = true;
+
+    try {
+      await showTrack(await loadTrack());
+    } catch (error) {
+      // One quiet warning, not one per poll.
+      if (!warned) {
+        console.warn(`Spotify card: showing the fallback (${error.name === 'AbortError' ? 'request timed out' : error.message}).`);
+        warned = true;
+      }
+      await showTrack(null);
+    } finally {
+      refreshing = false;
+    }
+  };
+
+  const startPolling = () => {
+    if (pollTimer) return;
+    pollTimer = window.setInterval(refreshMusic, MUSIC_POLL_MS);
+  };
+
+  const stopPolling = () => {
+    window.clearInterval(pollTimer);
+    pollTimer = 0;
+  };
+
+  if (isLiveSite) {
+    musicCard.classList.remove('is-fallback');
+    musicCard.classList.add('is-loading');
+    refreshMusic();
+    if (!document.hidden) startPolling();
+
+    // Hidden tab: stop asking. Back again: catch up right away, then resume.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopPolling();
+      } else {
+        refreshMusic();
+        startPolling();
+      }
+    });
+  } else {
+    shownContent = 'fallback';
+  }
+}

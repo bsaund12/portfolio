@@ -15,6 +15,7 @@
   --color-gray-600: #333333;
   --color-gray-700: #3A3A3A;
   --color-gray-800: #2A2A2A;
+  --color-gray-900: #1A1A1A;
 
   /* Fonts */
   --font-sans: 'Inter Tight', system-ui, -apple-system, sans-serif;
@@ -870,7 +871,7 @@ img {
 
 
 /* ==========================================================================
-   ABOUT: photo + now-playing pill
+   ABOUT: photo + live Spotify card
    ========================================================================== */
 .about {
   max-width: var(--page-width);
@@ -939,57 +940,207 @@ img {
   color: var(--color-gray-100);
 }
 
-.now-playing {
+/* Spotify card. script.js switches its state class:
+     .is-loading      gray shimmer placeholders while the API answers
+     .is-playing      bars bounce, cover spins like a record with a soft glow
+     .is-last-played  bars sit still, no spin
+     .is-fallback     "MUSIC / Always something on", not a link */
+.music-card {
   align-self: flex-start;
   display: flex;
   align-items: center;
   gap: 18px;
-  padding: 14px 24px;
-  border: 1px solid var(--color-white);
-  border-radius: var(--radius-pill);
+  width: min(100%, 420px);
+  padding: 14px 22px 14px 14px;
+  border: 1px solid var(--color-gray-700);
+  border-radius: 20px;
+  background: var(--color-black);
+  color: var(--color-white);
+  transition:
+    transform 250ms ease,
+    border-color 250ms ease;
 }
 
-/* Equalizer bars: frozen at different heights until a later step animates them */
-.eq {
-  display: flex;
-  align-items: end;
-  gap: 3px;
-  height: 22px;
+/* Only a real link (one with an href) reacts to hover */
+.music-card[href]:hover,
+.music-card[href]:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--color-white);
 }
 
-.eq span {
-  width: 4px;
-  background: var(--color-white);
+.music-art-wrap {
+  position: relative;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  background: var(--color-gray-900);
+  transition:
+    border-radius 400ms ease,
+    box-shadow 400ms ease;
 }
 
-.eq span:nth-child(1) { height: 45%; }
-.eq span:nth-child(2) { height: 100%; }
-.eq span:nth-child(3) { height: 65%; }
-.eq span:nth-child(4) { height: 30%; }
+.music-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
 
-.now-playing-text {
+/* display: block above would beat the browser's own "hidden" rule, so restate it */
+.music-art[hidden] {
+  display: none;
+}
+
+/* While playing the square cover rounds into a disc so the spin reads as a record */
+.music-card.is-playing .music-art-wrap {
+  border-radius: 50%;
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.35);
+}
+
+.music-card.is-playing .music-art {
+  animation: music-spin 12s linear infinite;
+}
+
+@keyframes music-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* A music note fills the empty cover square in the fallback */
+.music-card.is-fallback .music-art-wrap::before {
+  content: '♪';
+  font-size: 28px;
+  color: var(--color-gray-500);
+}
+
+.music-text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
+  min-width: 0; /* lets long titles shrink and end in "…" */
 }
 
-.now-playing-label {
+.music-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-mono);
   font-size: 11px;
+  letter-spacing: 0.1em;
   color: var(--color-gray-300);
 }
 
-.now-playing-track {
-  font-size: 16px;
-  font-weight: 500;
+.music-track,
+.music-artist {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.about-more {
-  align-self: flex-start;
-  padding-bottom: 4px;
-  border-bottom: 1px solid currentColor;
-  font-family: var(--font-mono);
-  font-size: 13px;
+.music-track {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.music-artist {
+  font-size: 14px;
+  color: var(--color-gray-300);
+}
+
+/* Equalizer: four bars grown from the bottom with scaleY */
+.music-eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.music-eq span {
+  width: 3px;
+  height: 100%;
+  background: var(--color-white);
+  transform-origin: bottom;
+  transform: scaleY(0.3);
+}
+
+.music-eq span:nth-child(2) { transform: scaleY(0.5); }
+.music-eq span:nth-child(3) { transform: scaleY(0.4); }
+.music-eq span:nth-child(4) { transform: scaleY(0.25); }
+
+.music-card.is-playing .music-eq span {
+  animation: music-eq 900ms ease-in-out infinite;
+}
+
+.music-card.is-playing .music-eq span:nth-child(2) { animation-duration: 700ms; animation-delay: -150ms; }
+.music-card.is-playing .music-eq span:nth-child(3) { animation-duration: 1100ms; animation-delay: -300ms; }
+.music-card.is-playing .music-eq span:nth-child(4) { animation-duration: 800ms; animation-delay: -80ms; }
+
+@keyframes music-eq {
+  0%,
+  100% {
+    transform: scaleY(0.25);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* Loading skeleton: same shape as the card, with a light band sweeping across */
+.music-card.is-loading .music-art-wrap,
+.music-card.is-loading .music-label,
+.music-card.is-loading .music-track,
+.music-card.is-loading .music-artist {
+  color: transparent;
+  background: linear-gradient(90deg, var(--color-gray-900) 25%, var(--color-gray-800) 50%, var(--color-gray-900) 75%);
+  background-size: 200% 100%;
+  animation: music-shimmer 1.4s linear infinite;
+}
+
+.music-card.is-loading .music-label,
+.music-card.is-loading .music-track,
+.music-card.is-loading .music-artist {
+  border-radius: 4px;
+}
+
+.music-card.is-loading .music-label { width: 80px; }
+.music-card.is-loading .music-track { width: 170px; }
+.music-card.is-loading .music-artist { display: block; width: 110px; height: 1.2em; }
+.music-card.is-loading .music-eq { visibility: hidden; }
+
+@keyframes music-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+/* Reduced motion: no spin, bouncing bars, lift or shimmer sweep */
+@media (prefers-reduced-motion: reduce) {
+  .music-card,
+  .music-art-wrap {
+    transition: none;
+  }
+
+  .music-card[href]:hover,
+  .music-card[href]:focus-visible {
+    transform: none;
+  }
+
+  .music-card.is-playing .music-art,
+  .music-card.is-playing .music-eq span,
+  .music-card.is-loading .music-art-wrap,
+  .music-card.is-loading .music-label,
+  .music-card.is-loading .music-track,
+  .music-card.is-loading .music-artist {
+    animation: none;
+  }
 }
 
 
