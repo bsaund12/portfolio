@@ -313,6 +313,114 @@ if (ribbonsSection && ribbons.length && !reduceMotion) {
   updateRunning();
 }
 
+// Custom cursor — a white square that sits on the mouse and a thin gray ring
+// that trails behind it. Built only on devices with a real mouse; phones and
+// tablets never get it. Links grow the ring; "Let's talk" grows it more and
+// shows "Email" inside.
+const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+if (hasFinePointer) {
+  const RING_FOLLOW = 0.12; // share of the gap the ring closes each frame (at 60 fps)
+  const INTERACTIVE = 'a, button, [role="button"], input, select, textarea, label, summary';
+
+  const ring = document.createElement('div');
+  ring.className = 'cursor-ring';
+  ring.setAttribute('aria-hidden', 'true');
+  ring.innerHTML = '<span class="cursor-ring-shape"></span><span class="cursor-label">Email</span>';
+
+  const dot = document.createElement('div');
+  dot.className = 'cursor-dot';
+  dot.setAttribute('aria-hidden', 'true');
+  dot.innerHTML = '<span class="cursor-dot-shape"></span>';
+
+  document.body.append(ring, dot);
+  document.documentElement.classList.add('has-custom-cursor');
+
+  const mouse = { x: 0, y: 0 };
+  const ringPosition = { x: 0, y: 0 };
+  let rafId = 0;
+  let lastTime = 0;
+  let visible = false;
+
+  const place = (element, x, y) => {
+    element.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  };
+
+  const setVisible = (isVisible) => {
+    visible = isVisible;
+    ring.classList.toggle('is-visible', isVisible);
+    dot.classList.toggle('is-visible', isVisible);
+  };
+
+  // Each frame the ring closes part of the gap to the mouse ("lerp"). Using
+  // the frame time keeps the trail the same on 60 Hz and 120 Hz screens.
+  const frame = (now) => {
+    const dt = clamp((now - lastTime) / 1000, 0, 0.1);
+    lastTime = now;
+
+    const follow = reduceMotion ? 1 : 1 - Math.pow(1 - RING_FOLLOW, dt * 60);
+    ringPosition.x += (mouse.x - ringPosition.x) * follow;
+    ringPosition.y += (mouse.y - ringPosition.y) * follow;
+
+    place(dot, mouse.x, mouse.y);
+    place(ring, ringPosition.x, ringPosition.y);
+
+    // Caught up: stop the loop until the mouse moves again.
+    if (Math.abs(mouse.x - ringPosition.x) < 0.1 && Math.abs(mouse.y - ringPosition.y) < 0.1) {
+      rafId = 0;
+      return;
+    }
+
+    rafId = window.requestAnimationFrame(frame);
+  };
+
+  const wake = () => {
+    if (rafId) return;
+    lastTime = performance.now();
+    rafId = window.requestAnimationFrame(frame);
+  };
+
+  window.addEventListener('pointermove', (event) => {
+    if (event.pointerType !== 'mouse') return;
+
+    mouse.x = event.clientX;
+    mouse.y = event.clientY;
+
+    // Coming (back) into the window: start the ring on the mouse, not across the screen.
+    if (!visible) {
+      ringPosition.x = mouse.x;
+      ringPosition.y = mouse.y;
+      setVisible(true);
+    }
+
+    wake();
+  }, { passive: true });
+
+  // Leaving the window: mouseout with nothing on the other side.
+  document.addEventListener('mouseout', (event) => {
+    if (!event.relatedTarget) setVisible(false);
+  });
+
+  // One listener for the whole page instead of one per link.
+  document.addEventListener('pointerover', (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    const overCta = Boolean(target && target.closest('.contact-cta'));
+    const overInteractive = Boolean(target && target.closest(INTERACTIVE));
+
+    ring.classList.toggle('is-hovering', overInteractive && !overCta);
+    ring.classList.toggle('is-cta', overCta);
+    dot.classList.toggle('is-hidden', overInteractive);
+  });
+
+  window.addEventListener('pointerdown', (event) => {
+    if (event.pointerType === 'mouse') ring.classList.add('is-pressed');
+  });
+
+  const release = () => ring.classList.remove('is-pressed');
+  window.addEventListener('pointerup', release);
+  window.addEventListener('blur', release);
+}
+
 // Visitor counter — fetches and displays the atomic count from my API.
 const VISITOR_COUNT_ENDPOINT = 'https://7udcf08keh.execute-api.us-east-1.amazonaws.com/count';
 const VISITOR_COUNT_TIMEOUT_MS = 8000;

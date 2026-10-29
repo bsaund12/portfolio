@@ -41,12 +41,11 @@
       <canvas class="blob-canvas" aria-hidden="true"></canvas>
 
       <div class="hero-content">
-        <p class="hero-eyebrow">CLOUD · SECURITY · UNC CHARLOTTE</p>
+        <p class="hero-eyebrow">SOFTWARE · UNC CHARLOTTE · SECURITY</p>
         <h1 class="hero-name">
           <span>Brian</span>
           <span>Saunders Jr.</span>
         </h1>
-        <p class="hero-tagline">I build cloud infrastructure.</p>
       </div>
 
       <a class="hero-scroll" href="#intro">
@@ -252,7 +251,14 @@
     <!-- ========== CONTACT ========== -->
     <section id="contact" class="contact">
       <p class="contact-eyebrow">OPEN TO 2027 CLOUD + SECURITY INTERNSHIPS</p>
-      <a class="contact-cta" href="mailto:bjsaunders976@gmail.com">Let's<br />talk ↗</a>
+      <!-- Each letter is a clipped box holding two copies; hover slides the
+           pair up so a twin rolls in from below. --i staggers the timing.
+           Screen readers just hear the aria-label. -->
+      <a class="contact-cta" href="mailto:bjsaunders976@gmail.com" aria-label="Let's talk, email Brian">
+        <span class="cta-line" aria-hidden="true"><span class="cta-letter" style="--i: 0"><span class="cta-letter-inner"><span>L</span><span>L</span></span></span><span class="cta-letter" style="--i: 1"><span class="cta-letter-inner"><span>e</span><span>e</span></span></span><span class="cta-letter" style="--i: 2"><span class="cta-letter-inner"><span>t</span><span>t</span></span></span><span class="cta-letter" style="--i: 3"><span class="cta-letter-inner"><span>'</span><span>'</span></span></span><span class="cta-letter" style="--i: 4"><span class="cta-letter-inner"><span>s</span><span>s</span></span></span></span>
+        <span class="cta-line" aria-hidden="true"><span class="cta-letter" style="--i: 5"><span class="cta-letter-inner"><span>t</span><span>t</span></span></span><span class="cta-letter" style="--i: 6"><span class="cta-letter-inner"><span>a</span><span>a</span></span></span><span class="cta-letter" style="--i: 7"><span class="cta-letter-inner"><span>l</span><span>l</span></span></span><span class="cta-letter" style="--i: 8"><span class="cta-letter-inner"><span>k</span><span>k</span></span></span> <span class="cta-arrow">↗</span></span>
+        <span class="cta-underline" aria-hidden="true"></span>
+      </a>
     </section>
   </main>
 
