@@ -10,6 +10,7 @@
   --color-card-dark: #0D0D0D;
   --color-gray-100: #DDDDDD;
   --color-gray-300: #BBBBBB;
+  --color-gray-500: #777777;
   --color-gray-600: #333333;
   --color-gray-700: #3A3A3A;
   --color-gray-800: #2A2A2A;
@@ -147,18 +148,60 @@ img {
   align-items: center;
 }
 
-/* Stand-in until the WebGL blob arrives in a later step: a plain white
-   circle behind your name, so the blend-mode flip is visible. */
+/* blob.js draws the 3D blob into this canvas. It sits centered behind the
+   text; the transparent background lets the black page show around the blob. */
 .blob-canvas {
   position: absolute;
   inset: 0;
   margin: auto;
   z-index: 1;
   display: block;
+  width: min(860px, 100%);
+  height: min(860px, 100vh);
+  background: transparent;
+  pointer-events: none;
+}
+
+/* Fallback when WebGL isn't available: blob.js adds .no-webgl to .hero, the
+   canvas hides, and a white CSS blob slowly morphs in its place. */
+.hero.no-webgl .blob-canvas {
+  display: none;
+}
+
+.hero.no-webgl::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  z-index: 1;
   width: min(480px, 80vw);
   height: min(480px, 80vw);
-  border-radius: 50%;
   background: var(--color-white);
+  animation: blob-morph 18s linear infinite;
+}
+
+/* Two different lopsided corner shapes; easing between them while turning
+   makes a square look like a slowly squishing blob. */
+@keyframes blob-morph {
+  0% {
+    border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+    transform: rotate(0deg);
+  }
+  50% {
+    border-radius: 63% 37% 38% 62% / 57% 36% 64% 43%;
+    transform: rotate(180deg);
+  }
+  100% {
+    border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero.no-webgl::before {
+    animation: none;
+    border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+  }
 }
 
 .hero-content {
@@ -395,8 +438,13 @@ img {
 
 /* ==========================================================================
    PATH: timeline
-   The vertical line and the dots are drawn with ::before, so the HTML
-   stays a plain ordered list.
+   The lines and circles are pseudo-elements, so the HTML stays a plain
+   ordered list. script.js measures the circles and sets three variables
+   on .timeline:
+     --line-top       where the first circle's center is
+     --line-length    distance from the first circle's center to the last
+     --line-progress  0 to 1, how much of the white line is drawn
+   It also adds .is-filled to each item once the white line reaches it.
    ========================================================================== */
 .path {
   max-width: 1000px;
@@ -415,49 +463,94 @@ img {
   list-style: none;
 }
 
-.timeline::before {
+/* Gray track (::before) and white progress line (::after) share one shape.
+   The fallbacks keep the track looking right before script.js measures. */
+.timeline::before,
+.timeline::after {
   content: '';
   position: absolute;
   left: 7px;
-  top: 8px;
-  bottom: 8px;
+  top: var(--line-top, 14px);
   width: 2px;
+  height: var(--line-length, calc(100% - 22px));
+}
+
+.timeline::before {
   background: var(--color-gray-800);
+}
+
+/* scaleY squashes the full-length line from the top: 0 = nothing, 1 = all */
+.timeline::after {
+  background: var(--color-white);
+  transform: scaleY(var(--line-progress, 0));
+  transform-origin: top;
 }
 
 .timeline-item {
   position: relative;
+  z-index: 1; /* circles sit on top of both lines */
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding-bottom: 64px;
+  color: var(--color-gray-500);
+  transition: color 400ms ease;
 }
 
 .timeline-item:last-child {
   padding-bottom: 0;
 }
 
-.timeline-item::before {
+.timeline-item.is-filled {
+  color: var(--color-white);
+}
+
+/* Each circle: outer ring (::before) and inner fill (::after) share one shape */
+.timeline-item::before,
+.timeline-item::after {
   content: '';
   position: absolute;
   left: -48px;
   top: 6px;
   width: 16px;
   height: 16px;
-  border: 2px solid var(--color-white);
   border-radius: 50%;
+}
+
+.timeline-item::before {
+  border: 2px solid var(--color-white);
   background: var(--color-black);
 }
 
-.timeline-item--current::before {
+/* Inner fill: grows from a dot to the full circle, like ink spreading */
+.timeline-item::after {
   background: var(--color-white);
+  transform: scale(0);
+  transition: transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.timeline-item.is-filled::after {
+  transform: scale(1);
+}
+
+.timeline-item.is-filled::before {
+  animation: timeline-pop 400ms ease;
+}
+
+@keyframes timeline-pop {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
 }
 
 .timeline-date {
   margin: 0;
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--color-gray-300);
 }
 
 .timeline-role {
@@ -470,7 +563,18 @@ img {
 .timeline-detail {
   margin: 0;
   font-size: 17px;
-  color: var(--color-gray-300);
+}
+
+/* Reduced motion: script.js fills everything up front; skip the animations */
+@media (prefers-reduced-motion: reduce) {
+  .timeline-item,
+  .timeline-item::after {
+    transition: none;
+  }
+
+  .timeline-item.is-filled::before {
+    animation: none;
+  }
 }
 
 

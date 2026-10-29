@@ -25,6 +25,80 @@ document.querySelectorAll('[data-scroll], a[href^="#"]').forEach((el) => {
   });
 });
 
+// Timeline progress — draws the white line down #path as you scroll and fills
+// each circle the moment the line's tip reaches its center.
+const timeline = document.querySelector('.timeline');
+const timelineItems = timeline ? Array.from(timeline.querySelectorAll('.timeline-item')) : [];
+
+if (timeline && timelineItems.length) {
+  // The line's tip follows this point on the screen (60% of the way down).
+  const TRIGGER_RATIO = 0.6;
+
+  // Circle centers, measured from the top of the timeline. Recomputed on resize.
+  let circleCenters = [];
+  let updateQueued = false;
+
+  const measureTimeline = () => {
+    const timelineTop = timeline.getBoundingClientRect().top;
+
+    circleCenters = timelineItems.map((item) => {
+      const circle = getComputedStyle(item, '::before');
+      const itemTop = item.getBoundingClientRect().top - timelineTop;
+      return itemTop + parseFloat(circle.top) + parseFloat(circle.height) / 2;
+    });
+
+    const lineTop = circleCenters[0];
+    const lineLength = circleCenters[circleCenters.length - 1] - lineTop;
+    timeline.style.setProperty('--line-top', `${lineTop}px`);
+    timeline.style.setProperty('--line-length', `${lineLength}px`);
+  };
+
+  const updateTimeline = () => {
+    updateQueued = false;
+
+    const lineTop = circleCenters[0];
+    const lineLength = circleCenters[circleCenters.length - 1] - lineTop;
+    const tip = window.innerHeight * TRIGGER_RATIO - timeline.getBoundingClientRect().top;
+    const progress = lineLength > 0 ? Math.min(Math.max((tip - lineTop) / lineLength, 0), 1) : 0;
+
+    timeline.style.setProperty('--line-progress', progress);
+    timelineItems.forEach((item, index) => {
+      item.classList.toggle('is-filled', tip >= circleCenters[index]);
+    });
+  };
+
+  // Scroll can fire many times per frame; only do the work once per frame.
+  const queueTimelineUpdate = () => {
+    if (updateQueued) return;
+    updateQueued = true;
+    window.requestAnimationFrame(updateTimeline);
+  };
+
+  measureTimeline();
+
+  if (reduceMotion) {
+    timeline.style.setProperty('--line-progress', 1);
+    timelineItems.forEach((item) => item.classList.add('is-filled'));
+    window.addEventListener('resize', measureTimeline);
+  } else {
+    updateTimeline();
+
+    window.addEventListener('scroll', queueTimelineUpdate, { passive: true });
+    window.addEventListener('resize', () => {
+      measureTimeline();
+      queueTimelineUpdate();
+    });
+  }
+
+  // Web fonts can change line heights once they load, which moves the circles.
+  if (document.fonts) {
+    document.fonts.ready.then(() => {
+      measureTimeline();
+      if (!reduceMotion) queueTimelineUpdate();
+    });
+  }
+}
+
 // Visitor counter — fetches and displays the atomic count from my API.
 const VISITOR_COUNT_ENDPOINT = 'https://7udcf08keh.execute-api.us-east-1.amazonaws.com/count';
 const VISITOR_COUNT_TIMEOUT_MS = 8000;
