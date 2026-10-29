@@ -284,7 +284,9 @@ img {
 
 /* ==========================================================================
    SKILL RIBBONS
-   Two tilted bands. A later step makes them slide sideways.
+   Two tilted bands that drift in opposite directions. script.js clones each
+   list and slides the track; when it has moved exactly one list-width it
+   jumps back, and because both copies are identical you never see the jump.
    ========================================================================== */
 .ribbons {
   position: relative;
@@ -293,16 +295,52 @@ img {
 }
 
 .ribbon {
+  --ribbon-gap: 28px; /* space on each side of the dot */
   position: absolute;
   left: -5%;
   right: -5%;
-  margin: 0;
-  padding: 18px 0 18px 5%;
+  padding: 18px 0;
   overflow: hidden;
-  white-space: nowrap;
   font-size: clamp(24px, 3vw, 36px);
   font-weight: 700;
   letter-spacing: -0.02em;
+}
+
+.ribbon-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.ribbon-list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each item carries its own trailing dot, so the copy lines up perfectly */
+.ribbon-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--ribbon-gap);
+  padding-right: var(--ribbon-gap);
+  white-space: nowrap;
+}
+
+.ribbon-list li::after {
+  content: '';
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@media (max-width: 720px) {
+  .ribbon {
+    --ribbon-gap: 20px;
+  }
 }
 
 .ribbon--light {
@@ -316,8 +354,38 @@ img {
   top: 120px;
   transform: rotate(2deg);
   background: var(--color-black);
+  color: var(--color-white);
   border-top: 1px solid var(--color-white);
   border-bottom: 1px solid var(--color-white);
+}
+
+/* Reduced motion: no sliding, so let each band wrap onto several lines and
+   show every skill at once. The bands stack in normal flow instead. */
+@media (prefers-reduced-motion: reduce) {
+  .ribbons {
+    height: auto;
+    display: grid;
+    gap: 32px;
+    padding: 40px 0;
+  }
+
+  .ribbon {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    margin: 0 -5%;
+  }
+
+  .ribbon-track {
+    width: auto;
+  }
+
+  .ribbon-list {
+    flex-wrap: wrap;
+    row-gap: 8px;
+    padding: 0 calc(5% + var(--gutter));
+  }
 }
 
 
@@ -346,6 +414,20 @@ img {
   color: var(--color-gray-300);
 }
 
+/* Stays pinned under the nav while the cards stack. "difference" keeps it
+   readable when a white card passes behind it. */
+.project-counter {
+  position: sticky;
+  top: 88px;
+  z-index: 5;
+  margin: 0 0 16px;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  mix-blend-mode: difference;
+}
+
 .project-list {
   display: flex;
   flex-direction: column;
@@ -353,7 +435,19 @@ img {
   padding-bottom: 80px;
 }
 
+/* A sticky card can only slide within its parent's content box, and padding
+   doesn't count. This empty spacer gives the last card room to stick too, so
+   the finished deck holds for a moment before scrolling away. */
+.project-list::after {
+  content: '';
+  height: 160px;
+}
+
+/* Deck: each card sticks a little lower than the one before it. script.js
+   shrinks, lifts and dims a card while the next one slides over it. */
 .project-card {
+  position: sticky;
+  top: var(--card-top, 120px);
   min-height: 460px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
@@ -361,6 +455,33 @@ img {
   gap: 32px 56px;
   padding: clamp(28px, 4vw, 44px);
   border-radius: var(--radius-card);
+  transform-origin: top center;
+  will-change: transform;
+}
+
+.project-card:nth-child(2) {
+  --card-top: 148px;
+}
+
+.project-card:nth-child(3) {
+  --card-top: 176px;
+}
+
+/* Dimming layer: a black sheet whose opacity script.js turns up (0 to 0.5) */
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--color-black);
+  opacity: var(--card-dim, 0);
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .project-card {
+    min-height: 0;
+  }
 }
 
 .project-card--light {
@@ -400,12 +521,20 @@ img {
   background: currentColor;
 }
 
+/* overflow: hidden is the "mask" the title slides up out of. The padding and
+   matching negative margin give descenders (g, p) room without moving layout. */
 .project-title {
-  margin: 0;
+  margin: 0 0 -0.2em;
+  padding-bottom: 0.2em;
+  overflow: hidden;
   font-size: clamp(36px, 5vw, 56px);
   font-weight: 800;
   line-height: 0.95;
   letter-spacing: -0.045em;
+}
+
+.project-title span {
+  display: block;
 }
 
 .project-summary {
@@ -433,6 +562,49 @@ img {
 .project-card--dark .project-stack {
   color: var(--color-gray-100);
   border-top-color: var(--color-white);
+}
+
+/* Content reveal. Only hidden once script.js adds .is-enhanced, so the cards
+   stay readable if JavaScript is off. Each piece waits a little longer than
+   the one before (transition-delay), which makes them appear in order. */
+.project-list.is-enhanced .project-tag,
+.project-list.is-enhanced .project-title span,
+.project-list.is-enhanced .project-summary,
+.project-list.is-enhanced .project-stack li {
+  transition:
+    opacity 500ms ease,
+    transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.project-list.is-enhanced .project-card:not(.is-revealed) .project-tag {
+  opacity: 0;
+}
+
+.project-list.is-enhanced .project-card:not(.is-revealed) .project-title span {
+  transform: translateY(105%);
+}
+
+.project-list.is-enhanced .project-card:not(.is-revealed) .project-summary {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.project-list.is-enhanced .project-card:not(.is-revealed) .project-stack li {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.project-list.is-enhanced .is-revealed .project-title span { transition-delay: 120ms; }
+.project-list.is-enhanced .is-revealed .project-summary { transition-delay: 280ms; }
+.project-list.is-enhanced .is-revealed .project-stack li:nth-child(1) { transition-delay: 420ms; }
+.project-list.is-enhanced .is-revealed .project-stack li:nth-child(2) { transition-delay: 500ms; }
+.project-list.is-enhanced .is-revealed .project-stack li:nth-child(3) { transition-delay: 580ms; }
+.project-list.is-enhanced .is-revealed .project-stack li:nth-child(4) { transition-delay: 660ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card {
+    will-change: auto;
+  }
 }
 
 

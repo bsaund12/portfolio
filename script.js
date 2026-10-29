@@ -25,6 +25,35 @@ document.querySelectorAll('[data-scroll], a[href^="#"]').forEach((el) => {
   });
 });
 
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+// Shared scroll loop — one passive scroll listener drives every scroll effect.
+// Scroll can fire many times per frame, so the work runs at most once per
+// frame. Each effect has two parts:
+//   measure() runs on load, resize and font load, for things that rarely change
+//   read()    runs every scroll frame; it only READS layout and returns a
+//             function that WRITES styles
+// All reads happen before all writes, so the browser works out layout once.
+const scrollEffects = [];
+let scrollFrameQueued = false;
+
+const runScrollEffects = () => {
+  scrollFrameQueued = false;
+  const writes = scrollEffects.map((effect) => effect.read());
+  writes.forEach((write) => write());
+};
+
+const queueScrollEffects = () => {
+  if (scrollFrameQueued) return;
+  scrollFrameQueued = true;
+  window.requestAnimationFrame(runScrollEffects);
+};
+
+const measureScrollEffects = () => {
+  scrollEffects.forEach((effect) => effect.measure());
+  queueScrollEffects();
+};
+
 // Timeline progress — draws the white line down #path as you scroll and fills
 // each circle the moment the line's tip reaches its center.
 const timeline = document.querySelector('.timeline');
@@ -34,69 +63,254 @@ if (timeline && timelineItems.length) {
   // The line's tip follows this point on the screen (60% of the way down).
   const TRIGGER_RATIO = 0.6;
 
-  // Circle centers, measured from the top of the timeline. Recomputed on resize.
+  // Circle centers, measured from the top of the timeline.
   let circleCenters = [];
-  let updateQueued = false;
 
-  const measureTimeline = () => {
-    const timelineTop = timeline.getBoundingClientRect().top;
+  scrollEffects.push({
+    measure: () => {
+      const timelineTop = timeline.getBoundingClientRect().top;
 
-    circleCenters = timelineItems.map((item) => {
-      const circle = getComputedStyle(item, '::before');
-      const itemTop = item.getBoundingClientRect().top - timelineTop;
-      return itemTop + parseFloat(circle.top) + parseFloat(circle.height) / 2;
+      circleCenters = timelineItems.map((item) => {
+        const circle = getComputedStyle(item, '::before');
+        const itemTop = item.getBoundingClientRect().top - timelineTop;
+        return itemTop + parseFloat(circle.top) + parseFloat(circle.height) / 2;
+      });
+
+      const lineTop = circleCenters[0];
+      const lineLength = circleCenters[circleCenters.length - 1] - lineTop;
+      timeline.style.setProperty('--line-top', `${lineTop}px`);
+      timeline.style.setProperty('--line-length', `${lineLength}px`);
+    },
+
+    read: () => {
+      if (reduceMotion) {
+        return () => {
+          timeline.style.setProperty('--line-progress', 1);
+          timelineItems.forEach((item) => item.classList.add('is-filled'));
+        };
+      }
+
+      const lineTop = circleCenters[0];
+      const lineLength = circleCenters[circleCenters.length - 1] - lineTop;
+      const tip = window.innerHeight * TRIGGER_RATIO - timeline.getBoundingClientRect().top;
+      const progress = lineLength > 0 ? clamp((tip - lineTop) / lineLength, 0, 1) : 0;
+
+      return () => {
+        timeline.style.setProperty('--line-progress', progress);
+        timelineItems.forEach((item, index) => {
+          item.classList.toggle('is-filled', tip >= circleCenters[index]);
+        });
+      };
+    }
+  });
+}
+
+// Project cards — they stack like a deck (position: sticky in CSS). While the
+// next card slides over the current one, the current one shrinks to 0.92,
+// lifts and dims. Each card's content reveals when it arrives, and the counter
+// shows which card is on top.
+const projectList = document.querySelector('.project-list');
+const projectCards = projectList ? Array.from(projectList.querySelectorAll('.project-card')) : [];
+const projectCurrent = document.querySelector('[data-project-current]');
+const projectTotal = document.querySelector('[data-project-total]');
+
+if (projectCards.length) {
+  const SCALE_DROP = 0.08; // 1 → 0.92 when fully covered
+  const MAX_DIM = 0.5; // opacity of the black dimming layer
+  const MAX_LIFT = 16; // px the covered card rises
+  const REVEAL_AT = 0.75; // reveal once a card's top passes 75% down the screen
+  const pad = (number) => String(number).padStart(2, '0');
+
+  let stickyTops = [];
+  let heights = [];
+  const lifts = projectCards.map(() => 0);
+  const revealed = projectCards.map(() => false);
+  let shownIndex = -1;
+
+  if (projectTotal) projectTotal.textContent = pad(projectCards.length);
+
+  // Hides the content so it can reveal; skipped for reduced motion.
+  if (!reduceMotion) projectList.classList.add('is-enhanced');
+
+  scrollEffects.push({
+    measure: () => {
+      stickyTops = projectCards.map((card) => parseFloat(getComputedStyle(card).top));
+      heights = projectCards.map((card) => card.offsetHeight);
+    },
+
+    read: () => {
+      // Where each card sits without our transform. Scaling from the top edge
+      // doesn't move the top, so only the lift needs undoing.
+      const tops = projectCards.map((card, index) => card.getBoundingClientRect().top + lifts[index]);
+
+      // How far the next card has slid over this one: 0 when it touches this
+      // card's bottom edge, 1 when it reaches its own sticky spot.
+      const covered = projectCards.map((card, index) => {
+        if (index === projectCards.length - 1) return 0;
+        const start = stickyTops[index] + heights[index];
+        const end = stickyTops[index + 1];
+        return clamp((start - tops[index + 1]) / (start - end), 0, 1);
+      });
+
+      tops.forEach((top, index) => {
+        if (top <= window.innerHeight * REVEAL_AT) revealed[index] = true;
+        // Only reset once the card is fully below the screen, so the replay is never seen.
+        if (top > window.innerHeight) revealed[index] = false;
+      });
+
+      // A card "takes over" once it covers more than half of the one before it.
+      let activeIndex = 0;
+      covered.forEach((amount, index) => {
+        if (amount >= 0.5) activeIndex = index + 1;
+      });
+
+      return () => {
+        projectCards.forEach((card, index) => {
+          if (!reduceMotion) {
+            const amount = covered[index];
+            lifts[index] = MAX_LIFT * amount;
+            card.style.transform = amount > 0
+              ? `translateY(${-lifts[index]}px) scale(${1 - SCALE_DROP * amount})`
+              : '';
+            card.style.setProperty('--card-dim', MAX_DIM * amount);
+          }
+
+          card.classList.toggle('is-revealed', revealed[index]);
+        });
+
+        if (projectCurrent && activeIndex !== shownIndex) {
+          projectCurrent.textContent = pad(activeIndex + 1);
+          shownIndex = activeIndex;
+        }
+      };
+    }
+  });
+}
+
+if (scrollEffects.length) {
+  measureScrollEffects();
+  window.addEventListener('scroll', queueScrollEffects, { passive: true });
+  window.addEventListener('resize', measureScrollEffects);
+
+  // Web fonts can change text heights once they load, which moves things.
+  if (document.fonts) document.fonts.ready.then(measureScrollEffects);
+}
+
+// Skill ribbons — two bands drifting in opposite directions at a steady speed.
+// Scrolling the page gives them a push that fades out; hovering one slows it
+// to a crawl so it can be read. Reduced motion skips all of this and CSS
+// wraps the lists onto several lines instead.
+const ribbonsSection = document.querySelector('.ribbons');
+const ribbons = Array.from(document.querySelectorAll('[data-ribbon]'))
+  .map((element) => ({
+    element,
+    track: element.querySelector('.ribbon-track'),
+    list: element.querySelector('.ribbon-list'),
+    direction: element.dataset.direction === 'right' ? 1 : -1,
+    offset: 0,
+    loopWidth: 0,
+    speedFactor: 1,
+    hovered: false
+  }))
+  .filter((ribbon) => ribbon.track && ribbon.list);
+
+if (ribbonsSection && ribbons.length && !reduceMotion) {
+  const BASE_SPEED = 60; // px per second, the same for both lists however long they are
+  const SCROLL_BOOST = 0.35; // extra px/s for each px/s the page scrolls
+  const MAX_BOOST = 600; // px per second
+  const HOVER_SPEED = 0.15; // fraction of normal speed while hovered
+
+  let boost = 0;
+  let lastTime = 0;
+  let lastScrollY = 0;
+  let rafId = 0;
+  let inView = !('IntersectionObserver' in window);
+
+  // Move `current` toward `target`. `rate` is how quickly (bigger = faster);
+  // using dt makes it feel the same on 60 Hz and 120 Hz screens.
+  const approach = (current, target, rate, dt) => current + (target - current) * (1 - Math.exp(-rate * dt));
+
+  ribbons.forEach((ribbon) => {
+    // Second copy for the seamless loop; screen readers skip it.
+    const copy = ribbon.list.cloneNode(true);
+    copy.setAttribute('aria-hidden', 'true');
+    copy.removeAttribute('aria-label');
+    ribbon.track.append(copy);
+
+    // Touch has no real hover, so only mouse and pen slow the ribbon.
+    ribbon.element.addEventListener('pointerenter', (event) => {
+      if (event.pointerType !== 'touch') ribbon.hovered = true;
     });
+    ribbon.element.addEventListener('pointerleave', () => {
+      ribbon.hovered = false;
+    });
+  });
 
-    const lineTop = circleCenters[0];
-    const lineLength = circleCenters[circleCenters.length - 1] - lineTop;
-    timeline.style.setProperty('--line-top', `${lineTop}px`);
-    timeline.style.setProperty('--line-length', `${lineLength}px`);
+  // One loop = exactly half the track (one copy of the list). Computed width
+  // keeps the fractions of a pixel and ignores the ribbon's tilt.
+  const measureRibbons = () => {
+    ribbons.forEach((ribbon) => {
+      ribbon.loopWidth = parseFloat(getComputedStyle(ribbon.track).width) / 2;
+    });
   };
 
-  const updateTimeline = () => {
-    updateQueued = false;
+  const frame = (now) => {
+    const dt = clamp((now - lastTime) / 1000, 0, 0.1);
+    lastTime = now;
 
-    const lineTop = circleCenters[0];
-    const lineLength = circleCenters[circleCenters.length - 1] - lineTop;
-    const tip = window.innerHeight * TRIGGER_RATIO - timeline.getBoundingClientRect().top;
-    const progress = lineLength > 0 ? Math.min(Math.max((tip - lineTop) / lineLength, 0), 1) : 0;
+    const scrollSpeed = dt > 0 ? Math.abs(window.scrollY - lastScrollY) / dt : 0;
+    lastScrollY = window.scrollY;
 
-    timeline.style.setProperty('--line-progress', progress);
-    timelineItems.forEach((item, index) => {
-      item.classList.toggle('is-filled', tip >= circleCenters[index]);
+    // Speed up quickly when scrolling starts, settle back slowly after.
+    const targetBoost = Math.min(scrollSpeed * SCROLL_BOOST, MAX_BOOST);
+    boost = approach(boost, targetBoost, targetBoost > boost ? 12 : 2.5, dt);
+
+    ribbons.forEach((ribbon) => {
+      ribbon.speedFactor = approach(ribbon.speedFactor, ribbon.hovered ? HOVER_SPEED : 1, 6, dt);
+      if (!ribbon.loopWidth) return;
+
+      ribbon.offset += ribbon.direction * (BASE_SPEED + boost) * ribbon.speedFactor * dt;
+      // Wrap into the range -loopWidth..0. Both copies are identical, so the jump is invisible.
+      ribbon.offset = (((ribbon.offset % ribbon.loopWidth) + ribbon.loopWidth) % ribbon.loopWidth) - ribbon.loopWidth;
+      ribbon.track.style.transform = `translate3d(${ribbon.offset}px, 0, 0)`;
     });
+
+    rafId = window.requestAnimationFrame(frame);
   };
 
-  // Scroll can fire many times per frame; only do the work once per frame.
-  const queueTimelineUpdate = () => {
-    if (updateQueued) return;
-    updateQueued = true;
-    window.requestAnimationFrame(updateTimeline);
+  const start = () => {
+    if (rafId) return;
+    lastTime = performance.now();
+    lastScrollY = window.scrollY;
+    rafId = window.requestAnimationFrame(frame);
   };
 
-  measureTimeline();
+  const stop = () => {
+    window.cancelAnimationFrame(rafId);
+    rafId = 0;
+  };
 
-  if (reduceMotion) {
-    timeline.style.setProperty('--line-progress', 1);
-    timelineItems.forEach((item) => item.classList.add('is-filled'));
-    window.addEventListener('resize', measureTimeline);
-  } else {
-    updateTimeline();
+  const updateRunning = () => {
+    if (inView && !document.hidden) {
+      start();
+    } else {
+      stop();
+    }
+  };
 
-    window.addEventListener('scroll', queueTimelineUpdate, { passive: true });
-    window.addEventListener('resize', () => {
-      measureTimeline();
-      queueTimelineUpdate();
-    });
+  measureRibbons();
+  window.addEventListener('resize', measureRibbons);
+  if (document.fonts) document.fonts.ready.then(measureRibbons);
+  document.addEventListener('visibilitychange', updateRunning);
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      inView = entries[0].isIntersecting;
+      updateRunning();
+    }).observe(ribbonsSection);
   }
 
-  // Web fonts can change line heights once they load, which moves the circles.
-  if (document.fonts) {
-    document.fonts.ready.then(() => {
-      measureTimeline();
-      if (!reduceMotion) queueTimelineUpdate();
-    });
-  }
+  updateRunning();
 }
 
 // Visitor counter — fetches and displays the atomic count from my API.

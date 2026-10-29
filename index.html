@@ -63,9 +63,80 @@
     </section>
 
     <!-- ========== SKILL RIBBONS ========== -->
+    <!-- script.js clones each list (aria-hidden) so the ribbon can loop seamlessly -->
     <div class="ribbons" role="region" aria-label="Skills">
-      <p class="ribbon ribbon--light">AWS ✱ Terraform ✱ Lambda ✱ DynamoDB ✱ CloudFront ✱ IAM ✱ GitHub Actions ✱ OIDC ✱</p>
-      <p class="ribbon ribbon--dark">Python ✱ Java ✱ React ✱ Spring Boot ✱ FastAPI ✱ PostgreSQL ✱ Docker ✱ Burp Suite ✱ Wireshark ✱</p>
+      <div class="ribbon ribbon--light" data-ribbon data-direction="left">
+        <div class="ribbon-track">
+          <ul class="ribbon-list" aria-label="Cloud and security skills">
+            <li>AWS Lambda</li>
+            <li>DynamoDB</li>
+            <li>S3</li>
+            <li>CloudFront</li>
+            <li>Route 53</li>
+            <li>API Gateway</li>
+            <li>IAM</li>
+            <li>Terraform</li>
+            <li>GitHub Actions</li>
+            <li>AWS CLI</li>
+            <li>Docker</li>
+            <li>Docker Compose</li>
+            <li>Vercel</li>
+            <li>Infrastructure as Code</li>
+            <li>CI/CD</li>
+            <li>OIDC Federation</li>
+            <li>IAM Policy Design</li>
+            <li>Least Privilege</li>
+            <li>Kali Linux</li>
+            <li>Burp Suite</li>
+            <li>Nmap</li>
+            <li>Nikto</li>
+            <li>Wireshark</li>
+            <li>OWASP ZAP</li>
+            <li>OWASP Juice Shop</li>
+            <li>DVWA</li>
+            <li>Penetration Testing</li>
+            <li>Secure Software Development</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ribbon ribbon--dark" data-ribbon data-direction="right">
+        <div class="ribbon-track">
+          <ul class="ribbon-list" aria-label="Code and tools skills">
+            <li>Python</li>
+            <li>Java</li>
+            <li>JavaScript</li>
+            <li>C</li>
+            <li>C++</li>
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>React</li>
+            <li>React Native</li>
+            <li>Expo</li>
+            <li>Tailwind CSS</li>
+            <li>FastAPI</li>
+            <li>Spring Boot</li>
+            <li>REST APIs</li>
+            <li>Spotify Web API</li>
+            <li>Alpaca API</li>
+            <li>PostgreSQL</li>
+            <li>MySQL</li>
+            <li>Git</li>
+            <li>GitHub</li>
+            <li>VS Code</li>
+            <li>Xcode Simulator</li>
+            <li>pytest</li>
+            <li>moto</li>
+            <li>Object-Oriented Programming</li>
+            <li>Data Structures</li>
+            <li>Algorithms</li>
+            <li>Unit Testing</li>
+            <li>Debugging</li>
+            <li>API Integration</li>
+            <li>Responsive Design</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <!-- ========== WORK ========== -->
@@ -75,6 +146,11 @@
         <p class="section-note">03 PROJECTS · KEEP SCROLLING</p>
       </div>
 
+      <!-- Visual only; script.js updates it as each card takes over -->
+      <p class="project-counter" aria-hidden="true">
+        <span data-project-current>01</span> / <span data-project-total>03</span>
+      </p>
+
       <div class="project-list">
         <article class="project-card project-card--light">
           <div class="project-main">
@@ -82,7 +158,7 @@
               <span class="project-dot" aria-hidden="true"></span>
               01 · LIVE · THIS SITE
             </p>
-            <h3 class="project-title">Cloud Resume Challenge</h3>
+            <h3 class="project-title"><span>Cloud Resume Challenge</span></h3>
             <p class="project-summary">A serverless visitor counter and a fully automated pipeline. The count survived a live migration from console-built resources to Terraform.</p>
           </div>
           <ul class="project-stack">
@@ -96,7 +172,7 @@
         <article class="project-card project-card--dark">
           <div class="project-main">
             <p class="project-tag">02 · IN PROGRESS · PERSONAL</p>
-            <h3 class="project-title">OptionScope</h3>
+            <h3 class="project-title"><span>OptionScope</span></h3>
             <p class="project-summary">A backend-first options analytics platform for quotes, expirations and option chains, built as a real tool rather than a one-off script.</p>
           </div>
           <ul class="project-stack">
@@ -109,7 +185,7 @@
         <article class="project-card project-card--light">
           <div class="project-main">
             <p class="project-tag">03 · COMPLETED · SECURITY LAB</p>
-            <h3 class="project-title">Web App Pen Test</h3>
+            <h3 class="project-title"><span>Web App Pen Test</span></h3>
             <p class="project-summary">A controlled lab against DVWA and OWASP Juice Shop. Found SQL injection, XSS and command injection, then documented risk and remediation.</p>
           </div>
           <ul class="project-stack">
