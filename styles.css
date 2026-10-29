@@ -882,20 +882,47 @@ img {
   gap: 56px;
 }
 
+/* Outer ring: a thin gray border 8px away from the photo. Its corner radius
+   is the photo's radius + the 8px gap + the 1px border, so both curves stay
+   the same distance apart all the way around. */
 .about-photo {
-  max-width: 440px;
+  --photo-gap: 8px;
+  width: 100%;
+  max-width: 420px;
   margin: 0;
-  border-radius: 220px 220px var(--radius-card) var(--radius-card);
+  padding: var(--photo-gap);
+  border: 1px solid var(--color-gray-400);
+  border-radius: calc(var(--radius-card) + var(--photo-gap) + 1px);
+}
+
+/* The window the photo sits in. overflow: hidden keeps the hover zoom inside
+   the rounded corners, so the frame itself never moves. */
+.about-photo-frame {
+  border-radius: var(--radius-card);
   overflow: hidden;
 }
 
+/* Full photo, never cropped: the width fills the frame and the height follows
+   the photo's own shape (the width/height attributes reserve that space). */
 .about-photo img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  object-position: top;
-  filter: grayscale(1) contrast(1.15);
+  height: auto;
+  transition: transform 600ms ease;
+}
+
+.about-photo:hover img {
+  transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-photo img {
+    transition: none;
+  }
+
+  .about-photo:hover img {
+    transform: none;
+  }
 }
 
 .about-copy {
