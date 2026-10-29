@@ -17,3 +17,9 @@ terraform/build/
 override.tf
 override_*.tf
 *_override.tf
+
+# macOS folder metadata
+.DS_Store
+
+# Local Claude Code settings (browser preview config)
+.claude/

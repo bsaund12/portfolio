@@ -2,540 +2,195 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>B.J. Saunders — Computer Science Student & Software Engineer</title>
-  <meta name="description" content="B.J. Saunders — Computer Science student focused on application development and cybersecurity. Portfolio showcasing projects, experience, and contact information." />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Brian Saunders Jr. — Cloud &amp; Security</title>
+  <meta name="description" content="Brian “BJ” Saunders Jr. — Computer Science student at UNC Charlotte with a cybersecurity focus, building cloud infrastructure and secure systems." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <script>
-    if (
-      new URLSearchParams(window.location.search).get('from') === 'about' &&
-      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    ) {
-      document.documentElement.classList.add('is-returning-from-about');
-    }
-  </script>
 </head>
 <body>
-  <canvas class="ambient-dust" aria-hidden="true"></canvas>
-  <div class="page-transition-overlay" aria-hidden="true"></div>
+  <!-- ========== NAV: floating pill ========== -->
+  <header class="site-nav">
+    <a class="nav-brand" href="#top">
+      <span class="nav-dot" aria-hidden="true"></span>
+      BJ SAUNDERS
+    </a>
 
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="brand" href="#home">B.J. Saunders</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#work">Work</a>
+      <a href="#path">Path</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
 
-      <nav class="nav-links" aria-label="Primary">
-        <a href="#home">Home</a>
-        <a href="#current-focus">Focus</a>
-        <a href="#education">Education</a>
-        <a href="#certifications">Certifications</a>
-        <a href="#projects">Projects</a>
-        <a href="#experience">Experience</a>
-        <a href="#skills">Skills</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </div>
+    <a
+      class="nav-resume"
+      href="assets/Brian-Saunders-Resume.pdf"
+      target="_blank"
+      rel="noopener noreferrer"
+    >Resume ↗</a>
   </header>
 
-  <main class="page">
-    <section id="home" class="hero reveal">
+  <main>
+    <!-- ========== HERO ========== -->
+    <section id="top" class="hero">
+      <!-- Empty for now. A later step draws the WebGL blob into this canvas. -->
+      <canvas class="blob-canvas" aria-hidden="true"></canvas>
+
       <div class="hero-content">
-        <p class="intro-eyebrow">Computer Science · Cybersecurity Concentration</p>
-
-        <h1 class="intro-name">Brian “BJ” Saunders Jr</h1>
-
-        <p class="hero-tagline">
-          Computer Science student at UNC Charlotte with a cybersecurity concentration,
-          building practical software through internship work, technical projects, and
-          hands-on security labs. I care about understanding systems deeply, writing useful
-          code, and keeping security in mind from the start.
-        </p>
-
-        <div class="hero-actions">
-          <a class="button button-primary" href="#projects">View My Work</a>
-          <a class="button button-secondary" href="#contact">Let’s Connect</a>
-          <a
-            class="button button-secondary"
-            href="assets/Brian-Saunders-Resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View Resume
-          </a>
-        </div>
+        <p class="hero-eyebrow">CLOUD · SECURITY · UNC CHARLOTTE</p>
+        <h1 class="hero-name">
+          <span>Brian</span>
+          <span>Saunders Jr.</span>
+        </h1>
+        <p class="hero-tagline">I build cloud infrastructure.</p>
       </div>
 
-      <div class="hero-visual">
-        <div class="audio-wave audio-wave-one"></div>
-        <div class="audio-wave audio-wave-two"></div>
+      <a class="hero-scroll" href="#intro">
+        SCROLL
+        <span class="hero-scroll-line" aria-hidden="true"></span>
+      </a>
+    </section>
 
-        <a class="portrait-link" href="about.html" aria-label="Learn more about B.J. outside of code">
-          <div class="portrait-ring">
-            <img
-              src="assets/images/bj-headshot.png"
-              alt=""
-              class="hero-portrait"
-            />
+    <!-- ========== INTRO STATEMENT ========== -->
+    <section id="intro" class="intro">
+      <p class="statement">
+        <span class="word">I'm</span> <span class="word">a</span> <span class="word">Computer</span> <span class="word">Science</span> <span class="word">student</span> <span class="word">with</span> <span class="word">a</span> <span class="word">cybersecurity</span> <span class="word">focus.</span> <span class="word">I</span> <span class="word">like</span> <span class="word">knowing</span> <span class="word">how</span> <span class="word">a</span> <span class="word">system</span> <span class="word">works</span> <span class="word">all</span> <span class="word">the</span> <span class="word">way</span> <span class="word">down,</span> <span class="word">then</span> <span class="word">making</span> <span class="word">sure</span> <span class="word">it</span> <span class="word">stays</span> <span class="word">up</span> <span class="word">and</span> <span class="word">stays</span> <span class="word">locked.</span> <span class="word">This</span> <span class="word">site</span> <span class="word">is</span> <span class="word">proof:</span> <span class="word">serverless</span> <span class="word">on</span> <span class="word">AWS,</span> <span class="word">built</span> <span class="word">with</span> <span class="word">Terraform.</span>
+      </p>
+    </section>
+
+    <!-- ========== SKILL RIBBONS ========== -->
+    <div class="ribbons" role="region" aria-label="Skills">
+      <p class="ribbon ribbon--light">AWS ✱ Terraform ✱ Lambda ✱ DynamoDB ✱ CloudFront ✱ IAM ✱ GitHub Actions ✱ OIDC ✱</p>
+      <p class="ribbon ribbon--dark">Python ✱ Java ✱ React ✱ Spring Boot ✱ FastAPI ✱ PostgreSQL ✱ Docker ✱ Burp Suite ✱ Wireshark ✱</p>
+    </div>
+
+    <!-- ========== WORK ========== -->
+    <section id="work" class="work">
+      <div class="section-head">
+        <h2 class="section-title">Selected<br />work</h2>
+        <p class="section-note">03 PROJECTS · KEEP SCROLLING</p>
+      </div>
+
+      <div class="project-list">
+        <article class="project-card project-card--light">
+          <div class="project-main">
+            <p class="project-tag">
+              <span class="project-dot" aria-hidden="true"></span>
+              01 · LIVE · THIS SITE
+            </p>
+            <h3 class="project-title">Cloud Resume Challenge</h3>
+            <p class="project-summary">A serverless visitor counter and a fully automated pipeline. The count survived a live migration from console-built resources to Terraform.</p>
           </div>
-        </a>
+          <ul class="project-stack">
+            <li>Route 53 → CloudFront → S3</li>
+            <li>API Gateway → Lambda → DynamoDB</li>
+            <li>Terraform · GitHub Actions · OIDC</li>
+            <li>pytest + moto gate every deploy</li>
+          </ul>
+        </article>
 
-        <div class="portrait-invitation" aria-hidden="true">
-          <span class="portrait-invitation-copy">
-            <span class="portrait-invitation-label">BEYOND THE CODE</span>
-            <span class="portrait-invitation-text">
-              <span class="portrait-invitation-arrow">↗</span>
-              Click to explore more about me
-            </span>
+        <article class="project-card project-card--dark">
+          <div class="project-main">
+            <p class="project-tag">02 · IN PROGRESS · PERSONAL</p>
+            <h3 class="project-title">OptionScope</h3>
+            <p class="project-summary">A backend-first options analytics platform for quotes, expirations and option chains, built as a real tool rather than a one-off script.</p>
+          </div>
+          <ul class="project-stack">
+            <li>FastAPI · PostgreSQL</li>
+            <li>Docker · Python</li>
+            <li>Alpaca market-data API</li>
+          </ul>
+        </article>
+
+        <article class="project-card project-card--light">
+          <div class="project-main">
+            <p class="project-tag">03 · COMPLETED · SECURITY LAB</p>
+            <h3 class="project-title">Web App Pen Test</h3>
+            <p class="project-summary">A controlled lab against DVWA and OWASP Juice Shop. Found SQL injection, XSS and command injection, then documented risk and remediation.</p>
+          </div>
+          <ul class="project-stack">
+            <li>Kali Linux · Burp Suite</li>
+            <li>Nmap · Nikto</li>
+            <li>Penetration test report</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ========== PATH (timeline) ========== -->
+    <section id="path" class="path">
+      <h2 class="section-title">The path<br />so far</h2>
+
+      <ol class="timeline">
+        <li class="timeline-item timeline-item--current">
+          <p class="timeline-date">SEP 2026 → NOW</p>
+          <h3 class="timeline-role">Student Technical Analyst</h3>
+          <p class="timeline-detail">UNC Charlotte OneIT Service Desk · TeamDynamix ITSM, campus-wide support</p>
+        </li>
+        <li class="timeline-item">
+          <p class="timeline-date">JAN TO JUL 2026</p>
+          <h3 class="timeline-role">Application Development Intern</h3>
+          <p class="timeline-detail">BitStack Technologies · React and Spring Boot HRMS features, role-based access</p>
+        </li>
+        <li class="timeline-item">
+          <p class="timeline-date">DEC 2025 → NOW</p>
+          <h3 class="timeline-role">Technology Coach</h3>
+          <p class="timeline-detail">YouCanTech · coding and robotics with middle and high schoolers</p>
+        </li>
+        <li class="timeline-item">
+          <p class="timeline-date">NEXT</p>
+          <h3 class="timeline-role">BS May 2027 · MS Cybersecurity Dec 2027</h3>
+          <p class="timeline-detail">49th Security Division · AWS Student Builder Group</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ========== ABOUT ========== -->
+    <section id="about" class="about">
+      <figure class="about-photo">
+        <img src="assets/images/bj-headshot.png" alt="Brian Saunders Jr." />
+      </figure>
+
+      <div class="about-copy">
+        <h2 class="section-title">Beyond<br />the code.</h2>
+        <p class="about-text">Dean's List four times, Chancellor's List twice, and studying for AWS Cloud Practitioner. There is always music on while I build.</p>
+
+        <div class="now-playing">
+          <span class="eq" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </span>
+          <span class="now-playing-text">
+            <span class="now-playing-label">NOW PLAYING</span>
+            <span class="now-playing-track">Always something on</span>
           </span>
         </div>
+
+        <a class="about-more" href="about.html">More about me ↗</a>
       </div>
     </section>
 
-    <section id="current-focus" class="current-focus reveal">
-      <div class="section-heading">
-        <h2>Current Focus</h2>
-        <p class="section-text">
-          The areas I am actively developing through internship work, independent projects,
-          and certification study.
-        </p>
-      </div>
-
-      <div class="focus-list">
-        <article class="focus-card">
-          <h3>Supporting End Users at OneIT</h3>
-          <p>
-            Serving as a Student Technical Analyst at UNC Charlotte's OneIT Service Desk,
-            resolving user issues across multiple channels and building fluency with
-            enterprise ticketing and campus information systems.
-          </p>
-        </article>
-
-        <article class="focus-card">
-          <h3>Building OptionScope</h3>
-          <p>
-            Developing a general-purpose options analytics platform with FastAPI,
-            PostgreSQL, Docker, and market-data integrations to deepen my understanding of
-            financial systems and backend architecture.
-          </p>
-        </article>
-
-        <article class="focus-card">
-          <h3>Growing Cloud Fundamentals</h3>
-          <p>
-            Preparing for the AWS Certified Cloud Practitioner exam while strengthening my
-            understanding of cloud concepts, core services, security, pricing, and
-            architecture.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section id="education" class="education block reveal">
-      <div class="section-heading">
-        <h2>Education</h2>
-      </div>
-
-      <div class="experience-grid">
-        <article class="experience-card reveal">
-          <h3>B.S. Computer Science, Cybersecurity Concentration</h3>
-
-          <p class="experience-meta">UNC Charlotte · Expected May 2027</p>
-
-          <p>GPA: 3.4. Dean's List (4x), Chancellor's List (2x).</p>
-        </article>
-
-        <article class="experience-card reveal">
-          <h3>M.S. Cybersecurity (Accelerated Early Entry)</h3>
-
-          <p class="experience-meta">UNC Charlotte · Expected Dec 2027</p>
-
-          <p>
-            Accelerated Early Entry program combining undergraduate and graduate
-            coursework in cybersecurity.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section id="certifications" class="certifications block reveal">
-      <div class="section-heading">
-        <h2>Learning & Certifications</h2>
-        <p class="section-text">
-          Cloud fundamentals and technical credentials I am actively building toward.
-        </p>
-      </div>
-
-      <article class="certification-item">
-        <div class="certification-visual" aria-hidden="true">
-          <div class="certification-visual-grid"></div>
-          <div class="certification-visual-content">
-            <span class="certification-visual-kicker">AWS</span>
-            <span class="certification-visual-title">Cloud Practitioner</span>
-            <span class="certification-visual-level">Foundational</span>
-            <span class="certification-visual-status">In Progress</span>
-          </div>
-        </div>
-
-        <div class="certification-copy">
-          <p class="certification-status">In Progress</p>
-          <h3>AWS Certified Cloud Practitioner</h3>
-          <p class="certification-detail">Foundational • CLF-C02</p>
-          <p>
-            Studying AWS cloud concepts, core services, security, architecture, pricing,
-            and support to better understand how cloud-based systems are designed,
-            deployed, and discussed in technical teams.
-          </p>
-          <a
-            class="button button-primary certification-link"
-            href="https://aws.amazon.com/certification/certified-cloud-practitioner/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn More
-          </a>
-        </div>
-      </article>
-    </section>
-
-    <section id="projects" class="projects block reveal">
-      <div class="section-heading">
-        <h2>Selected Projects</h2>
-        <p class="section-text">
-          Projects and labs that show how I apply software development, security, and
-          systems thinking outside the classroom.
-        </p>
-      </div>
-
-      <div class="project-grid">
-        <article class="project-card reveal">
-          <div class="project-header">
-            <h3>Cloud Resume Challenge</h3>
-          </div>
-
-          <p class="project-stack">AWS, Terraform, Python, GitHub Actions</p>
-
-          <p>
-            This site runs on it: a serverless visitor counter and fully automated
-            deployment pipeline built on AWS.
-          </p>
-
-          <ul>
-            <li>
-              Serverless visitor counter: API Gateway to Lambda to DynamoDB, with the
-              count persisted across a live infrastructure migration.
-            </li>
-            <li>
-              All backend infrastructure defined in Terraform; deploys run through
-              GitHub Actions using OIDC federation rather than stored credentials.
-            </li>
-            <li>Unit tested with pytest and moto, with tests gating every deployment.</li>
-          </ul>
-
-          <div class="project-meta">
-            <span class="meta-chip">LIVE · THIS SITE</span>
-          </div>
-        </article>
-
-        <article class="project-card reveal">
-          <div class="project-header">
-            <h3>OptionScope</h3>
-          </div>
-
-          <p class="project-stack">FastAPI, PostgreSQL, Docker, Python, Alpaca API</p>
-
-          <p>
-            Building a backend-first options analytics platform for exploring stock quotes,
-            option expirations, option chains, and future strategy analysis.
-          </p>
-
-          <ul>
-            <li>
-              Implemented market-data endpoints with validation and provider integration.
-            </li>
-            <li>
-              Structured the backend with FastAPI, PostgreSQL, Docker, and tests.
-            </li>
-            <li>
-              Designed the project as a portfolio-grade tool rather than a one-off script.
-            </li>
-          </ul>
-
-          <div class="project-meta">
-            <span class="meta-chip">IN PROGRESS · PERSONAL PROJECT</span>
-          </div>
-        </article>
-
-        <article class="project-card reveal">
-          <div class="project-header">
-            <h3>Vulnerable Web Application Penetration Test</h3>
-          </div>
-
-          <p class="project-stack">
-            Kali Linux, DVWA, OWASP Juice Shop, Nmap, Nikto, Burp Suite
-          </p>
-
-          <p>
-            Built and tested a controlled security lab using intentionally vulnerable web
-            applications to practice reconnaissance, exploitation, documentation, and
-            remediation thinking.
-          </p>
-
-          <ul>
-            <li>
-              Conducted reconnaissance and exploitation using Nmap, Nikto, and Burp Suite.
-            </li>
-            <li>
-              Identified SQL Injection, XSS, and Command Injection vulnerabilities.
-            </li>
-            <li>
-              Documented findings, risk, and remediation steps in a structured penetration
-              test report.
-            </li>
-          </ul>
-
-          <div class="project-meta">
-            <span class="meta-chip">COMPLETED · SECURITY LAB</span>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section id="experience" class="experience block reveal">
-      <div class="section-heading">
-        <h2>Experience</h2>
-      </div>
-
-      <div class="experience-grid">
-        <article class="experience-card reveal">
-          <h3>Student Technical Analyst, UNC Charlotte OneIT Service Desk</h3>
-
-          <p class="experience-meta">Sep 2026 - Present</p>
-
-          <p>
-            Provide multi-channel technical support by phone, email, live chat, and
-            walk-in for faculty, staff, and students, diagnosing issues across
-            workstations, mobile devices, software installations, and NinerNet account
-            management.
-          </p>
-
-          <ul>
-            <li>
-              Manage support requests end to end in TeamDynamix (ITSM), documenting
-              troubleshooting steps and resolutions, and escalating to professional IT
-              staff through Slack when an issue moves past first-line resolution.
-            </li>
-          </ul>
-        </article>
-
-        <article class="experience-card reveal">
-          <h3>Application Development Intern, BitStack Technologies</h3>
-
-          <p class="experience-meta">Jan 2026 - Jul 2026</p>
-
-          <p>
-            Contributed to full-stack HRMS features in a production-style team environment,
-            working with React interfaces, API integration, workflow logic, Git branching,
-            pull requests, and debugging across the stack.
-          </p>
-
-          <ul>
-            <li>
-              Built an end-to-end leave request workflow in React and Spring Boot,
-              supporting PNG and PDF attachments and approve/reject actions routed to the
-              correct approver.
-            </li>
-            <li>
-              Developed dashboard widgets for pending approvals, employee leave summaries,
-              and task-card actions, backed by SQL queries served through REST APIs.
-            </li>
-            <li>
-              Implemented approved-absence views filterable by date, team, and department,
-              with role-based access separating Employee, Manager, Supervisor, HR, and
-              Admin permissions.
-            </li>
-            <li>
-              Debugged defects across the front end, API, and database layers, delivering
-              fixes through Git branching, pull requests, rebasing, and code review in
-              Agile sprints.
-            </li>
-          </ul>
-        </article>
-
-        <article class="experience-card reveal">
-          <h3>Technology Coach, YouCanTech</h3>
-
-          <p class="experience-meta">Dec 2025 - Present</p>
-
-          <p>
-            Coach middle and high school students through hands-on coding and robotics
-            activities, helping them practice programming logic, debugging,
-            problem-solving, and iterative development.
-          </p>
-
-          <ul>
-            <li>Teach programming logic, problem-solving, and computational thinking.</li>
-            <li>Mentor students through debugging and iterative development.</li>
-          </ul>
-        </article>
-
-        <article class="experience-card experience-card-secondary reveal">
-          <h3>Member, 49th Security Division</h3>
-
-          <p class="experience-meta">Aug 2025 - Present</p>
-
-          <p>
-            Participate in a cybersecurity-focused student organization at UNC Charlotte,
-            building exposure to security concepts, technical discussion, professional
-            development, and hands-on learning outside the classroom.
-          </p>
-        </article>
-
-        <article class="experience-card experience-card-secondary reveal">
-          <h3>Member, AWS Student Builder Group</h3>
-
-          <p class="experience-meta">Aug 2026 - Present</p>
-
-          <p>
-            Participate in a student community focused on AWS cloud technologies,
-            engaging in hands-on workshops, technical discussions, and peer learning
-            around cloud architecture and services.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section id="skills" class="skills block reveal">
-      <div class="section-heading">
-        <h2>Skills</h2>
-        <p class="section-text">
-          Tools, languages, and concepts I have used through coursework, internship work,
-          labs, and independent projects.
-        </p>
-      </div>
-
-      <div class="skills-grid">
-        <article class="skills-card reveal">
-          <h3>Languages</h3>
-          <p>Java, Python, JavaScript, C, C++, HTML, CSS</p>
-        </article>
-
-        <article class="skills-card reveal">
-          <h3>Frontend</h3>
-          <p>React, React Native, Expo, Tailwind CSS, Responsive Design</p>
-        </article>
-
-        <article class="skills-card reveal">
-          <h3>Backend & APIs</h3>
-          <p>FastAPI, Spring Boot, REST APIs, Spotify Web API, Alpaca API</p>
-        </article>
-
-        <article class="skills-card reveal">
-          <h3>Databases & Cloud</h3>
-          <p>
-            PostgreSQL, MySQL, Docker, Docker Compose, Vercel, AWS Lambda, DynamoDB, S3,
-            CloudFront, Route 53, API Gateway, IAM, Terraform
-          </p>
-        </article>
-
-        <article class="skills-card reveal">
-          <h3>Developer Tools</h3>
-          <p>
-            Git, GitHub, Visual Studio Code, Xcode Simulator, GitHub Actions, AWS CLI,
-            pytest, moto
-          </p>
-        </article>
-
-        <article class="skills-card reveal">
-          <h3>Security Tools & Concepts</h3>
-          <p>
-            Kali Linux, Burp Suite, Nmap, Nikto, Wireshark, OWASP ZAP, OWASP Juice Shop,
-            DVWA, Penetration Testing, Secure Software Development, IAM Policy Design,
-            Least Privilege, OIDC Federation
-          </p>
-        </article>
-
-        <article class="skills-card reveal">
-          <h3>Core Concepts</h3>
-          <p>
-            Object-Oriented Programming, Data Structures, Algorithms, Testing, Debugging,
-            API Integration, Infrastructure as Code, CI/CD, Unit Testing
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section id="contact" class="contact block reveal">
-      <div class="section-heading">
-        <h2>Contact</h2>
-      </div>
-
-      <p>
-        Interested in internships, software projects, cybersecurity, or early-career
-        engineering conversations? I would be glad to connect.
-      </p>
-
-      <div class="contact-links" aria-label="Contact links">
-        <a
-          class="contact-icon-link"
-          href="mailto:bjsaunders976@gmail.com"
-          aria-label="Email Brian"
-          title="Email"
-        >
-          <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-            <path d="M4 6h16v12H4z" />
-            <path d="m4 7 8 6 8-6" />
-          </svg>
-        </a>
-
-        <a
-          class="contact-icon-link"
-          href="https://github.com/bsaund12"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="View Brian's GitHub"
-          title="GitHub"
-        >
-          <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-            <path d="M12 2.75a9.25 9.25 0 0 0-2.93 18.03c.46.08.63-.2.63-.44v-1.6c-2.56.56-3.1-1.1-3.1-1.1-.42-1.07-1.03-1.36-1.03-1.36-.84-.57.06-.56.06-.56.93.07 1.42.96 1.42.96.83 1.41 2.17 1 2.7.77.08-.6.32-1 .58-1.23-2.04-.23-4.19-1.02-4.19-4.54 0-1 .36-1.82.95-2.46-.1-.23-.41-1.16.09-2.43 0 0 .78-.25 2.55.94A8.78 8.78 0 0 1 12 7.42c.79 0 1.57.1 2.31.31 1.77-1.19 2.55-.94 2.55-.94.5 1.27.19 2.2.09 2.43.6.64.95 1.46.95 2.46 0 3.53-2.15 4.3-4.2 4.53.33.29.63.85.63 1.71v2.42c0 .24.17.53.64.44A9.25 9.25 0 0 0 12 2.75Z" />
-          </svg>
-        </a>
-
-        <a
-          class="contact-icon-link"
-          href="https://www.linkedin.com/in/bj-saunders/"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="View Brian's LinkedIn"
-          title="LinkedIn"
-        >
-          <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-            <path d="M5.5 9.25h3v9.25h-3z" />
-            <path d="M7 5.5a1.75 1.75 0 1 1 0 3.5 1.75 1.75 0 0 1 0-3.5Z" />
-            <path d="M11 9.25h2.85v1.27c.43-.74 1.35-1.45 2.85-1.45 2.47 0 3.8 1.57 3.8 4.46v4.97h-3v-4.52c0-1.45-.51-2.18-1.55-2.18-1.18 0-1.95.84-1.95 2.18v4.52h-3z" />
-          </svg>
-        </a>
-
-        <a
-          class="contact-icon-link"
-          href="assets/Brian-Saunders-Resume.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Open Brian's resume"
-          title="Resume"
-        >
-          <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-            <path d="M7 3.5h7l3 3v14H7z" />
-            <path d="M14 3.5v3h3" />
-            <path d="M9.5 11h5" />
-            <path d="M9.5 14h5" />
-            <path d="M9.5 17h3" />
-          </svg>
-        </a>
-      </div>
+    <!-- ========== CONTACT ========== -->
+    <section id="contact" class="contact">
+      <p class="contact-eyebrow">OPEN TO 2027 CLOUD + SECURITY INTERNSHIPS</p>
+      <a class="contact-cta" href="mailto:bjsaunders976@gmail.com">Let's<br />talk ↗</a>
     </section>
   </main>
 
+  <!-- ========== FOOTER (continues the white contact panel) ========== -->
   <footer class="site-footer">
-    <p>Visitor count: <span data-visitor-count>—</span></p>
+    <div class="footer-inner">
+      <ul class="footer-links">
+        <li><a href="mailto:bjsaunders976@gmail.com">bjsaunders976@gmail.com</a></li>
+        <li><a href="https://github.com/bsaund12" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/bj-saunders/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+        <li><a href="assets/Brian-Saunders-Resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a></li>
+      </ul>
+      <p class="footer-count"><span data-visitor-count>—</span> visitors · served by CloudFront</p>
+    </div>
   </footer>
 
   <script src="script.js" defer></script>
