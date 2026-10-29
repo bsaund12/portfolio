@@ -203,7 +203,6 @@ if (flowInElements.length && !reduceMotion) {
 
   flowInElements.forEach((element) => {
     element.style.transformOrigin = 'top center';
-    element.style.willChange = 'transform, opacity';
   });
 
   scrollEffects.push({

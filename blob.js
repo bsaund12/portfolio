@@ -9,8 +9,15 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const WOBBLE = 0.16;
-  const MAX_PIXEL_RATIO = 1.5;
+  const MAX_PIXEL_RATIO = 1.25;
+  const RENDER_SCALE = 0.75; // draw fewer pixels than shown; CSS stretches the canvas back up
   const MOUSE_EASE = 0.05;
+  const GUARD_FRAMES = 60;
+  const GUARD_MAX_AVG_MS = 40;
+
+  // Phones and tablets get the CSS blob. Their GPUs can't keep up with ray
+  // marching, and iOS kills the whole tab when a frame takes too long.
+  const isTouchOrSmall = window.matchMedia('(hover: none), (pointer: coarse)').matches || window.innerWidth < 900;
 
   // Runs once per corner of a rectangle that covers the whole canvas.
   const VERTEX_SHADER = `
@@ -19,8 +26,8 @@
   `;
 
   // Runs once per pixel and decides its color.
-  const FRAGMENT_SHADER = `
-    precision highp float;
+  const fragmentShaderSource = (precision) => `
+    precision ${precision} float;
     uniform vec2 uRes;
     uniform float uTime;
     uniform vec2 uMouse;
@@ -55,7 +62,7 @@
 
       float t = 0.0;
       bool hit = false;
-      for (int i = 0; i < 90; i++) {
+      for (int i = 0; i < 64; i++) {
         float d = sdf(ro + rd * t);
         if (d < 0.001) { hit = true; break; }
         t += d;
@@ -81,7 +88,16 @@
     if (hero) hero.classList.add('no-webgl');
   };
 
-  const gl = canvas.getContext('webgl', { premultipliedAlpha: true, antialias: true });
+  if (isTouchOrSmall) {
+    showFallback();
+    return;
+  }
+
+  const gl = canvas.getContext('webgl', {
+    antialias: false,
+    powerPreference: 'low-power',
+    premultipliedAlpha: true
+  });
 
   if (!gl) {
     console.warn('Hero blob: WebGL is not available, showing the CSS fallback.');
@@ -104,7 +120,10 @@
   };
 
   const vertexShader = compile(gl.VERTEX_SHADER, VERTEX_SHADER, 'vertex');
-  const fragmentShader = compile(gl.FRAGMENT_SHADER, FRAGMENT_SHADER, 'fragment');
+  // Some GPUs only have medium precision in fragment shaders.
+  const highp = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
+  const precision = highp && highp.precision > 0 ? 'highp' : 'mediump';
+  const fragmentShader = compile(gl.FRAGMENT_SHADER, fragmentShaderSource(precision), 'fragment');
 
   if (!vertexShader || !fragmentShader) {
     showFallback();
@@ -145,10 +164,14 @@
   let lastFrameTime = 0;
   let rafId = 0;
   let heroInView = true;
+  let dead = false;
+  let guardFrames = 0;
+  let guardTotal = 0;
 
-  // Match the drawing buffer to the canvas's CSS size so the blob stays sharp.
+  // Size the drawing buffer from the canvas's CSS size, a bit under full
+  // resolution; the blob is soft and shiny, so the difference is hard to see.
   const resize = () => {
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO) * RENDER_SCALE;
     const width = Math.round(canvas.clientWidth * pixelRatio);
     const height = Math.round(canvas.clientHeight * pixelRatio);
 
@@ -160,6 +183,7 @@
   };
 
   const draw = () => {
+    if (dead) return;
     resize();
 
     mouse.x += (mouse.targetX - mouse.x) * MOUSE_EASE;
@@ -174,6 +198,28 @@
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   };
 
+  const stop = () => {
+    window.cancelAnimationFrame(rafId);
+    rafId = 0;
+  };
+
+  // Give up on WebGL for good and switch to the CSS blob.
+  const bail = (reason) => {
+    if (dead) return;
+    dead = true;
+    stop();
+    console.warn(`Hero blob: ${reason}, showing the CSS fallback.`);
+    showFallback();
+  };
+
+  // The GPU can drop the context (driver reset, memory pressure). Calling
+  // preventDefault is the spec's way to stop the browser from tearing it down
+  // silently; the blob doesn't try to come back, it just stays on the CSS one.
+  canvas.addEventListener('webglcontextlost', (event) => {
+    event.preventDefault();
+    bail('the WebGL context was lost');
+  });
+
   if (reduceMotion) {
     draw();
     window.addEventListener('resize', draw);
@@ -181,22 +227,29 @@
   }
 
   const frame = (now) => {
+    const frameTime = now - lastFrameTime;
     // Only count time while running, so the blob doesn't jump after a pause.
-    elapsed += now - lastFrameTime;
+    elapsed += frameTime;
     lastFrameTime = now;
+
+    // Too slow for this computer: check the average of the first 60 frames.
+    if (guardFrames < GUARD_FRAMES) {
+      guardFrames += 1;
+      guardTotal += frameTime;
+      if (guardFrames === GUARD_FRAMES && guardTotal / GUARD_FRAMES > GUARD_MAX_AVG_MS) {
+        bail(`frames averaged ${Math.round(guardTotal / GUARD_FRAMES)}ms`);
+        return;
+      }
+    }
+
     draw();
     rafId = window.requestAnimationFrame(frame);
   };
 
   const start = () => {
-    if (rafId) return;
+    if (rafId || dead) return;
     lastFrameTime = performance.now();
     rafId = window.requestAnimationFrame(frame);
-  };
-
-  const stop = () => {
-    window.cancelAnimationFrame(rafId);
-    rafId = 0;
   };
 
   const updateRunning = () => {

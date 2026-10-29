@@ -88,7 +88,6 @@ img {
   mix-blend-mode: difference;
   opacity: 0;
   transition: opacity 200ms ease;
-  will-change: transform;
 }
 
 .cursor-ring.is-visible,
@@ -286,6 +285,14 @@ img {
   animation: blob-morph 18s linear infinite;
 }
 
+/* Phones and tablets always get this blob (blob.js skips WebGL there) */
+@media (max-width: 899px), (hover: none), (pointer: coarse) {
+  .hero.no-webgl::before {
+    width: min(320px, 80vw);
+    height: min(320px, 80vw);
+  }
+}
+
 /* Two different lopsided corner shapes; easing between them while turning
    makes a square look like a slowly squishing blob. */
 @keyframes blob-morph {
@@ -429,7 +436,6 @@ img {
 .ribbon-track {
   display: flex;
   width: max-content;
-  will-change: transform;
 }
 
 .ribbon-list {
@@ -460,6 +466,15 @@ img {
 @media (max-width: 720px) {
   .ribbon {
     --ribbon-gap: 20px;
+  }
+}
+
+/* Phones: a moving track is drawn as one long strip, and the full lists make
+   it ~12,000px wide. Showing only the key skills keeps it a fraction of that.
+   (Reduced motion doesn't move, so it still lists everything.) */
+@media (max-width: 720px) and (prefers-reduced-motion: no-preference) {
+  .ribbon-list li:not(.ribbon-core) {
+    display: none;
   }
 }
 
@@ -576,7 +591,6 @@ img {
   padding: clamp(28px, 4vw, 44px);
   border-radius: var(--radius-card);
   transform-origin: top center;
-  will-change: transform;
 }
 
 .project-card:nth-child(2) {
@@ -720,12 +734,6 @@ img {
 .project-list.is-enhanced .is-revealed .project-stack li:nth-child(2) { transition-delay: 500ms; }
 .project-list.is-enhanced .is-revealed .project-stack li:nth-child(3) { transition-delay: 580ms; }
 .project-list.is-enhanced .is-revealed .project-stack li:nth-child(4) { transition-delay: 660ms; }
-
-@media (prefers-reduced-motion: reduce) {
-  .project-card {
-    will-change: auto;
-  }
-}
 
 
 /* ==========================================================================
