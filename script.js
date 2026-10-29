@@ -187,6 +187,53 @@ if (projectCards.length) {
   });
 }
 
+// Flow-in — any [data-flow-in] element rises 90px, grows from 96% and fades
+// in as it scrolls into view, finishing about a third of the way up the
+// screen. It's tied to scroll position, so scrolling back up reverses it.
+const flowInElements = Array.from(document.querySelectorAll('[data-flow-in]'));
+
+if (flowInElements.length && !reduceMotion) {
+  const RISE = 90; // px it starts below its spot
+  const START_SCALE = 0.96;
+  const FINISH_AT = 0.35; // share of the trip across the screen when it's fully in
+
+  // How far down we've pushed each one, so reads can undo it. Scaling from
+  // the top edge doesn't move the top, so only the rise needs undoing.
+  const offsets = flowInElements.map(() => 0);
+
+  flowInElements.forEach((element) => {
+    element.style.transformOrigin = 'top center';
+    element.style.willChange = 'transform, opacity';
+  });
+
+  scrollEffects.push({
+    measure: () => {},
+
+    read: () => {
+      const viewportHeight = window.innerHeight;
+
+      // 0 when the element's top touches the bottom of the screen, 1 once it
+      // has travelled FINISH_AT of the way from entering to fully leaving.
+      const progress = flowInElements.map((element, index) => {
+        const top = element.getBoundingClientRect().top - offsets[index];
+        const travel = (viewportHeight + element.offsetHeight) * FINISH_AT;
+        return clamp((viewportHeight - top) / travel, 0, 1);
+      });
+
+      return () => {
+        flowInElements.forEach((element, index) => {
+          const amount = progress[index];
+          offsets[index] = RISE * (1 - amount);
+          element.style.opacity = amount;
+          element.style.transform = amount < 1
+            ? `translateY(${offsets[index]}px) scale(${START_SCALE + (1 - START_SCALE) * amount})`
+            : '';
+        });
+      };
+    }
+  });
+}
+
 if (scrollEffects.length) {
   measureScrollEffects();
   window.addEventListener('scroll', queueScrollEffects, { passive: true });

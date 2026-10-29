@@ -226,11 +226,20 @@
 
     <!-- ========== ABOUT ========== -->
     <section id="about" class="about">
-      <figure class="about-photo">
-        <img src="assets/images/bj-headshot.png" alt="Brian Saunders Jr." />
+      <!-- The figure draws the outer ring; the frame clips the photo's zoom on hover -->
+      <figure class="about-photo" data-flow-in>
+        <div class="about-photo-frame">
+          <img
+            src="assets/images/bj-headshot.jpg"
+            alt="Brian Saunders Jr."
+            width="900"
+            height="1345"
+            loading="lazy"
+          />
+        </div>
       </figure>
 
-      <div class="about-copy">
+      <div class="about-copy" data-flow-in>
         <h2 class="section-title">Beyond<br />the code.</h2>
         <p class="about-text">Dean's List four times, Chancellor's List twice, and studying for AWS Cloud Practitioner. There is always music on while I build.</p>
 
